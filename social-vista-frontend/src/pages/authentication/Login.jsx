@@ -2,6 +2,7 @@ import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const validationSchema = Yup.object({
  
@@ -20,6 +21,7 @@ const Login = () => {
     // Handle registration logic here
     console.log('Form data submitted:', values);
   };
+  const navigate=useNavigate();
 
   return (
     <Formik
@@ -27,10 +29,10 @@ const Login = () => {
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      <Form className='mt-3 space-y-3'>
+      <Form className='mt-3 space-y-3 '>
         
 
-        <div className='space-y-3'>
+        <div className='space-y-2'>
 
           <Field as={TextField} placeholder='Email' type="email" id="email" variant='outlined' fullWidth name="email" />
           <ErrorMessage name="email" component="div" />
@@ -45,7 +47,7 @@ const Login = () => {
         <div className='mt-4'>
           <Button sx={{ padding: ".6rem 0rem" }} type="submit" fullWidth variant='contained' color='primary'>Login</Button>
           <div className="mt-4 font-semibold text-sm text-slate-500 text-center md:text-left">
-            Don't have an account? <a className="text-red-600 hover:underline hover:underline-offset-4" href="#">Register</a>
+            Don't have an account? <a className="text-red-600 hover:underline hover:underline-offset-4 cursor-pointer" onClick={()=>navigate("/register")}>Register</a>
           </div>
         </div>
       </Form>

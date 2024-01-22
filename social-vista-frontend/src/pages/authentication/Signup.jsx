@@ -5,6 +5,7 @@ import { Button, TextField } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { useNavigate } from 'react-router-dom';
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required('First Name is required'),
@@ -35,6 +36,8 @@ const Signup = () => {
   const handleChange = (event) => {
     setGender(event.target.value);
   };
+
+  const navigate=useNavigate();
 
   return (
     <Formik
@@ -85,7 +88,7 @@ const Signup = () => {
         <div className='mt-4'>
           <Button sx={{ padding: ".6rem 0rem" }} type="submit" fullWidth variant='contained' color='primary'>Register</Button>
           <div className="mt-4 font-semibold text-sm text-slate-500 text-center md:text-left">
-            Already have an account? <a className="text-red-600 hover:underline hover:underline-offset-4" href="#">Login</a>
+            Already have an account? <a className="text-red-600 hover:underline hover:underline-offset-4 cursor-pointer" onClick={()=>navigate("/login")}>Login</a>
           </div>
         </div>
       </Form>
