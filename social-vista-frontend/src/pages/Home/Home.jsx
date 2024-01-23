@@ -1,7 +1,7 @@
-import { Container, Grid } from '@mui/material';
+import {Grid } from '@mui/material';
 import React from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import MiddlePart from '../../components/middlepart/MiddlePart';
 import Reels from '../../components/reels/Reels';
 import CreateReel from '../../components/reels/CreateReel';
@@ -9,9 +9,10 @@ import Profile from '../profile/Profile';
 import HomeRight from '../../components/homeright/HomeRight';
 
 const Home = () => {
+  const location=useLocation();
   return (
-    <Container maxWidth="xl">
-      <div className='20px container flex'> 
+   
+      <div className='20px'> 
         <Grid container spacing={0} >
           <Grid item xs={0} lg={3}>
             <div className='sticky top-0'>
@@ -19,7 +20,7 @@ const Home = () => {
             </div>
           </Grid>
 
-          <Grid lg={6} item className='px-5 flex justify-center' xs={12}>
+          <Grid lg={location.pathname==="/"?6:9} item className='px-5 flex justify-center' xs={12}>
             
               <Routes>
                 <Route path='/' element={<MiddlePart />}></Route>
@@ -31,15 +32,15 @@ const Home = () => {
           </Grid>
 
           <Grid item lg={3} className='relative'>
-            <Container maxWidth="md"> {/* Another Nested Container */}
+           
               <div className='sticky top-0 w-full '>
                 <HomeRight />
               </div>
-            </Container>
+          
           </Grid>
         </Grid>
       </div>
-    </Container>
+   
   );
 }
 
