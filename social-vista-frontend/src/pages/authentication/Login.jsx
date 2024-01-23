@@ -3,6 +3,8 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import {useDispatch} from 'react-redux'
+import { loginUserAction } from '../../Redux/Auth/auth.action';
 
 const validationSchema = Yup.object({
  
@@ -11,15 +13,17 @@ const validationSchema = Yup.object({
 });
 
 const Login = () => {
+
   const initialValues = {
    
     email: '',
     password: '',
   };
 
+  const dispatch =useDispatch();
   const onSubmit = (values) => {
-    // Handle registration logic here
     console.log('Form data submitted:', values);
+    dispatch(loginUserAction({data:values}))
   };
   const navigate=useNavigate();
 

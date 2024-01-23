@@ -1,4 +1,6 @@
-import { LOGIN_FAILURE, LOGIN_REQUEST, REGISTER_REQUEST} from "./auth.actionType"
+import { API_BASE_URL } from "../../config/api"
+import { LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, REGISTER_REQUEST} from "./auth.actionType"
+import axios from 'axios';
 
 export const loginUserAction=(loginData)=>async(dispatch)=>{
     dispatch({type:LOGIN_REQUEST})

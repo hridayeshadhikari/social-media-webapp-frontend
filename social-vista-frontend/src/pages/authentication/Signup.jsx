@@ -6,6 +6,8 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { registerUserAction } from '../../Redux/Auth/auth.action';
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required('First Name is required'),
@@ -30,11 +32,14 @@ const Signup = () => {
     // Handle registration logic here
     values.gender=gender
     console.log('Form data submitted:', values);
+    dispatch(registerUserAction({data:values}))
   };
-
+  const dispatch=useDispatch();
 
   const handleChange = (event) => {
+
     setGender(event.target.value);
+
   };
 
   const navigate=useNavigate();
