@@ -10,6 +10,7 @@ import HomeRight from '../../components/homeright/HomeRight';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfileAction } from '../../Redux/Auth/auth.action';
 import Message from '../Message/Message';
+import CreatePostModal from '../../components/CreatePost/CreatePostModal';
 
 const Home = () => {
   const dispatch=useDispatch();
@@ -43,6 +44,7 @@ const Home = () => {
             <Route path='/profile/:id' element={<Profile />}></Route>
             <Route path='/message' element={<Message/>}></Route>
             <Route path='/home' element={<MiddlePart />}></Route>
+            <Route path='/create-post' element={<CreatePostModal/>}></Route>
 
           </Routes>
 

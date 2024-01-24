@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { sideMenuBarItems } from './SidebarNavigation'
 import { Avatar, Card, Divider } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -7,14 +7,27 @@ import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import CreatePostModal from '../CreatePost/CreatePostModal';
 
 const Sidebar = () => {
+
+    const [openCreatePostModal,setOpenCreatePostModal]=React.useState(false);
+
+    const handleCloseCreatePostModal=()=>setOpenCreatePostModal(false);
+
+    const handleOpenCreatePostModal=()=>{
+        setOpenCreatePostModal(true);
+        console.log("open post model....",openCreatePostModal);
+    };
 
 
     const navigate=useNavigate();
     const handleNavigate=(item)=>{
         if(item.title==="Profile"){
             navigate(`/profile/${auth.user?.id}`)
+        }else if(item.title==="Create Post"){
+            handleOpenCreatePostModal()
+            
         }
         else{
             navigate(item.path)
@@ -38,6 +51,8 @@ const Sidebar = () => {
                 </div>
                 <div className='space-y-8'>
                     {sideMenuBarItems.map((item) =>
+                    
+
                         <div onClick={() => handleNavigate(item)} className='flex space-x-3 cursor-pointer items-center '>
                             {item.icon}
                             <p className='text-xl'>{item.title}</p>
@@ -79,6 +94,9 @@ const Sidebar = () => {
                         <MenuItem onClick={handleClose}>Logout</MenuItem>
                     </Menu>
                 </div>
+            </div>
+            <div>
+                <CreatePostModal handleClose={handleCloseCreatePostModal} open={openCreatePostModal}/>
             </div>
         </Card>
 
