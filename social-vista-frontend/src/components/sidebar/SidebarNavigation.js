@@ -14,26 +14,26 @@ export const sideMenuBarItems=[
   {
     title:"Reels",
     icon:<ExploreIcon/>,
-    path:"/"
+    path:"/reels"
   },
   {
     title:"Create Reels",
     icon:<ControlPointIcon/>,
-    path:"/"
+    path:"/create-reels"
   },
   {
     title:"Message",
     icon:<MessageIcon/>,
-    path:"/"
+    path:"/message"
   },
   {
     title:"Lists",
     icon:<ListAltIcon/>,
-    path:"/"
+    path:"/list"
   },
   {
     title:"Profile",
     icon:<AccountCircleIcon/>,
-    path:"/"
+    path:"/profile"
   },
 ]

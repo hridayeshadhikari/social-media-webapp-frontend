@@ -8,17 +8,19 @@ import CreateReel from '../../components/reels/CreateReel';
 import Profile from '../profile/Profile';
 import HomeRight from '../../components/homeright/HomeRight';
 import { useDispatch, useSelector } from 'react-redux';
-import { store } from '../../Redux/store';
-import { getUserProfileAction } from '../../Redux/Auth/auth.action';
+import { getProfileAction } from '../../Redux/Auth/auth.action';
+import Message from '../Message/Message';
 
 const Home = () => {
   const dispatch=useDispatch();
   const jwt=localStorage.getItem("jwt");
-  useEffect(()=>{
-    dispatch(getUserProfileAction("jwt"));
-  },[jwt])
-  const {auth}=useSelector(store=>store);
 
+  useEffect(()=>{
+    dispatch(getProfileAction(jwt));
+  },[jwt])
+
+  const {auth}=useSelector(store=>store);
+  console.log("auth",auth)
  
 
   const location = useLocation();
@@ -39,15 +41,18 @@ const Home = () => {
             <Route path='/reels' element={<Reels />}></Route>
             <Route path='/create-reel' element={<CreateReel />}></Route>
             <Route path='/profile/:id' element={<Profile />}></Route>
+            <Route path='/message' element={<Message/>}></Route>
+            <Route path='/home' element={<MiddlePart />}></Route>
+
           </Routes>
 
         </Grid>
 
-        {location.pathname === "/" &&
+        {location.pathname ==="/" &&
           <Grid item lg={3} className='relative'>
 
             <div className='sticky top-0 w-full '>
-              <HomeRight />
+              <HomeRight/>
             </div>
 
           </Grid>

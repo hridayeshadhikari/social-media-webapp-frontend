@@ -7,6 +7,8 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import PostCard from '../../components/PostCard/PostCard'
 import ReelCard from '../../components/ReelCard/ReelCard';
+import { useSelector } from 'react-redux';
+import ProfileModal from './ProfileModal';
 
 const tabs = [{ value: "post", name: "Posts" },
 { value: "reels", name: "Reels" },
@@ -20,10 +22,17 @@ const savePost = [1, 1, 1, 1, 1];
 const Profile = () => {
   const [value, setValue] = React.useState('post');
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const { auth } = useSelector(store => store);
   const { id } = useParams();
+  
   return (
     <Card className='my-10 w-[70%]'>
       <div className='rounded-md'>
@@ -32,18 +41,18 @@ const Profile = () => {
         </div>
         <div className='px-5 flex justify-between items-start mt-5 h-[5rem]'>
           <Avatar className='tarnsform -translate-y-24' sx={{ height: "8rem", width: "8rem" }} src='https://img.freepik.com/free-photo/androgynous-avatar-non-binary-queer-person_23-2151100226.jpg?t=st=1705995186~exp=1705998786~hmac=9a0d68b55d7d18fb8ac72fdf8d1875d797b0bb7ebe28b1ed8fd8ff6c1aa486fc&w=740' />
-          {true ? <Button sx={{ borderRadius: "20px" }} variant='outlined'>Edit Profile</Button>
+          {true ? <Button onClick={handleOpen} sx={{ borderRadius: "20px" }} variant='outlined'>Edit Profile</Button>
             : <Button sx={{ borderRadius: "20px" }} variant='outlined'>Follow</Button>}
         </div>
         <div className='p-5'>
           <div>
-            <h1 className='py-1 font-bold text-xl'>Hridayesh Adhikari</h1>
-            <p>@Harry</p>
+            <h1 className='py-1 font-bold text-xl'>{auth.user?.firstName+" "+auth.user?.lastName}</h1>
+            <p>@{auth.user?.firstName.toLowerCase() + "_" + auth.user?.lastName.toLowerCase()}</p>
           </div>
           <div className='flex gap-3 items-center py-3'>
-            <span>41 post</span>
-            <span>35 follower</span>
-            <span>40 followings</span>
+            <span>41 Post</span>
+            <span>{auth.user?.follower} Follower</span>
+            <span>40 Followings</span>
           </div>
           <div>
             <p>my name is hridayesh adhikari</p>
@@ -78,6 +87,9 @@ const Profile = () => {
           </div>
         </section>
       </div>
+      <section>
+        <ProfileModal open={open} handleClose={handleClose}/>
+      </section>
     </Card>
   )
 }

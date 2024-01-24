@@ -5,15 +5,30 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
+
+
+    const navigate=useNavigate();
+    const handleNavigate=(item)=>{
+        if(item.title==="Profile"){
+            navigate(`/profile/${auth.user?.id}`)
+        }
+        else{
+            navigate(item.path)
+        }
+    }
+    
+    const { auth } = useSelector(store => store);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
-      setAnchorEl(null);
+        setAnchorEl(null);
     };
     return (
         <Card className='card h-screen flex flex-col justify-between py-5'>
@@ -22,10 +37,11 @@ const Sidebar = () => {
                     <span className='logo font-bold text-xl'>SocialVista</span>
                 </div>
                 <div className='space-y-8'>
-                    {sideMenuBarItems.map((item) => <div className='flex space-x-3 cursor-pointer items-center '>
-                        {item.icon}
-                        <p className='text-xl'>{item.title}</p>
-                    </div>)}
+                    {sideMenuBarItems.map((item) =>
+                        <div onClick={() => handleNavigate(item)} className='flex space-x-3 cursor-pointer items-center '>
+                            {item.icon}
+                            <p className='text-xl'>{item.title}</p>
+                        </div>)}
                 </div>
             </div>
 
@@ -36,8 +52,8 @@ const Sidebar = () => {
                         <Avatar src='https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-collection-image-icon-stock-isolated-object-set-symbol-web-137160339.jpg' />
 
                         <div >
-                            <p className='font-bold'>Hridayesh Adhikari</p>
-                            <p className='opacity-70'>@Harry</p>
+                            <p className='font-bold'>{auth.user?.firstName + " " + auth.user?.lastName}</p>
+                            <p className='opacity-70'>@{auth.user?.firstName.toLowerCase() + "_" + auth.user?.lastName.toLowerCase()}</p>
                         </div>
                     </div>
                     <Button
@@ -47,7 +63,7 @@ const Sidebar = () => {
                         aria-expanded={open ? 'true' : undefined}
                         onClick={handleClick}
                     >
-                        <MoreVertIcon/>
+                        <MoreVertIcon />
                     </Button>
                     <Menu
                         id="basic-menu"

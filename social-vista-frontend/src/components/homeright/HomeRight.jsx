@@ -3,7 +3,7 @@ import SearchUser from '../SearchUser/SearchUser'
 import PopularUser from './PopularUser'
 import { Card } from '@mui/material'
 
-const popularUser=[1,1,1,1,1,1]
+const popularUser=[1,1,1,1,1]
 const HomeRight = () => {
   return (
     <div className='pr-5'>
@@ -21,4 +21,4 @@ const HomeRight = () => {
   )
 }
 
-export default HomeRight
+export default HomeRight;

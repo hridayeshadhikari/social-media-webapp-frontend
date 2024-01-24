@@ -28,4 +28,4 @@ const PopularUser = () => {
   )
 }
 
-export default PopularUser
+export default PopularUser;

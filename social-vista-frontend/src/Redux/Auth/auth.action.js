@@ -2,13 +2,15 @@ import { API_BASE_URL, api } from "../../config/api"
 import { GET_PROFILE_FAILURE, GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, REGISTER_REQUEST, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_REQUEST, UPDATE_PROFILE_SUCCESS} from "./auth.actionType"
 import axios from 'axios';
 
+
+
 //method for signup action
 export const loginUserAction=(loginData)=>async(dispatch)=>{
     dispatch({type:LOGIN_REQUEST})
     try{
         const{data}=await axios.post(`${API_BASE_URL}/auth/signin`,loginData.data)
         if(data.token){
-            localStorage.setItem("token",data.token)
+            localStorage.setItem("jwt",data.token)
             
         }
         console.log("login success,data")
@@ -41,16 +43,16 @@ export const registerUserAction=(loginData)=>async(dispatch)=>{
 }
 
 //method to get our profile
-export const getUserProfileAction=(jwt)=>async(dispatch)=>{
+export const getProfileAction=(jwt)=>async(dispatch)=>{
     dispatch({type:GET_PROFILE_REQUEST})
     try{
-        const{data}=await axios.get(
-            `${API_BASE_URL}/api/user/profile`,
+        const jwt=localStorage.getItem("jwt")
+        const{data}=await axios.get(`${API_BASE_URL}/api/user/profile`,
             {
                 headers :{
-                    "Authorization":`Bearer ${jwt}`
-                }
-            }
+                    "Authorization": `Bearer ${jwt}`,
+                },
+            },
             );
         
         console.log("profile -----",data)
@@ -67,7 +69,7 @@ export const getUserProfileAction=(jwt)=>async(dispatch)=>{
 export const updateProfileAction=(reqData)=>async(dispatch)=>{
     dispatch({type:UPDATE_PROFILE_REQUEST})
     try{
-        const{data}=await api.post(
+        const{data}=await api.put(
             `${API_BASE_URL}/api/user/update`,reqData
             
             );
