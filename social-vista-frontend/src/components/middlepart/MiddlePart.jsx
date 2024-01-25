@@ -1,19 +1,32 @@
 import { Avatar, Card, IconButton } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import AddIcon from '@mui/icons-material/Add';
 import StoryCircle from './StoryCircle';
 import ImageIcon from '@mui/icons-material/Image'
 import VideocamIcon from '@mui/icons-material/Videocam'
 import ArticleIcon from '@mui/icons-material/Article'
 import PostCard from '../PostCard/PostCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllPostAction } from '../../Redux/Post/post.action';
 
 const story=[11,1,1,1,1,1];
 const post=[1,2,2,1,1,1,1,];
 
 const MiddlePart = () => {
+
+  const dispatch =useDispatch();
+  const {post}=useSelector(store=>store);
+
+
+
   const handleOpenCreatePostModel=()=>{
     console.log("open post model")
   }
+
+  useEffect(()=>{
+    dispatch(getAllPostAction())
+  },[])
+
   return (
     <div className='px-20'>
       <section className='flex items-center p-5 rounded-b-md'>
@@ -55,7 +68,7 @@ const MiddlePart = () => {
         </div>
       </Card>
       <div className='mt-5 space-y-5'>
-        {post.map((item)=><PostCard/>)}<PostCard/>
+        {post.posts.map((item)=><PostCard item={item}/>)}
       </div>
     </div>
   )

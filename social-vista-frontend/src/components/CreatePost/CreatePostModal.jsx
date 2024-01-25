@@ -9,6 +9,7 @@ import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { UploadToCloud } from '../../Utils/UploadToCloud';
+import { createPostAction } from '../../Redux/Post/post.action';
 
 const style = {
   position: 'absolute',
@@ -34,12 +35,14 @@ export default function CreatePostModal({ handleClose, open }) {
     },
     onSubmit: (values) => {
       console.log("formik values", values)
-
+      dispatch(createPostAction(values))
     }
   });
   const [selectedImage, setSelectedImage] = React.useState();
   const [selectedVideo, setSelectedVideo] = React.useState();
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const dispatch=useDispatch();
 
   const handleSelectImage = async(event) => {
     setIsLoading(true)

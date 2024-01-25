@@ -16,7 +16,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 
-const PostCard = () => {
+const PostCard = ({item}) => {
     return (
         <Card className=''>
             <CardHeader
@@ -30,18 +30,18 @@ const PostCard = () => {
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title="Hridayesh Adhikari"
-                subheader="@harry11223344"
+                title={item.user.firstName+" "+item.user.lastName}
+                subheader={"@"+item.user.firstName.toLowerCase()+"_"+item.user.lastName.toLowerCase()}
             />
             <CardMedia
                 component="img"
                 height="194"
-                image="https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510_640.jpg"
+                image={item.image}
                 alt="Paella dish"
             />
             <CardContent>
                 <Typography variant="body2" color="text.secondary">
-                    Beautiful flower
+                    {item.caption}
                 </Typography>
             </CardContent>
             <CardActions disableSpacing className='flex justify-between'>
