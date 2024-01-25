@@ -8,6 +8,7 @@ import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { UploadToCloud } from '../../Utils/UploadToCloud';
 
 const style = {
   position: 'absolute',
@@ -36,15 +37,24 @@ export default function CreatePostModal({ handleClose, open }) {
 
     }
   });
-  const [selectImage, setSelectedImage] = React.useState();
-  const [selectVideo, setSelectedVideo] = React.useState();
+  const [selectedImage, setSelectedImage] = React.useState();
+  const [selectedVideo, setSelectedVideo] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const handleSelectImage = () => {
-    
+  const handleSelectImage = async(event) => {
+    setIsLoading(true)
+    const imageUrl=await UploadToCloud(event.target.files[0],"image")
+    setSelectedImage(imageUrl);
+    setIsLoading(false);
+    formik.setFieldValue("image",imageUrl);
   }
 
-  const handleSelectVideo = () => { 
+  const handleSelectVideo = async(event) => { 
+    setIsLoading(true)
+    const videoUrl=await UploadToCloud(event.target.files[0],"video")
+    setSelectedVideo(videoUrl);
+    setIsLoading(false);
+    formik.setFieldValue("video",videoUrl);
 
   }
 
@@ -75,7 +85,7 @@ export default function CreatePostModal({ handleClose, open }) {
                 <div>
                   <input type="file" accept='image/*' onChange={handleSelectImage} style={{ display: "none" }} id='image-input' />
                   <label htmlFor="image-input">
-                    <IconButton color='primary'>
+                    <IconButton color='primary' component='span'>
                       <InsertPhotoIcon />
                     </IconButton>
                   </label>
@@ -91,9 +101,9 @@ export default function CreatePostModal({ handleClose, open }) {
                   <span>Video</span>
                 </div>
               </div>
-              {selectImage &&
+              {selectedImage &&
                 <div>
-                  <img className='h-[10rem]' src={selectImage} alt="" />
+                  <img className='h-[10rem]' src={selectedImage} alt="" />
                 </div>}
 
               <div className='flex w-full justify-end ' >

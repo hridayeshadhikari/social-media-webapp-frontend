@@ -19,6 +19,7 @@ function App() {
   return (
     <div>
       <Routes>
+
     
         <Route path='/a' element={<Authentication/>}></Route>
         <Route path='/*' element={auth.user?<Home/>:<Authentication/>}></Route>
