@@ -25,7 +25,7 @@ export const postReducer = (state = initialState, action) => {
 
         case LIKE_POST_SUCCESS:
             return {
-                ...state, like: action.payload, posts: state.payload.map((item) => item.id === action.payload
+                ...state, like: action.payload, posts: state.posts.map((item) => item.id === action.payload
                     .id ? action.payload : item),
                 loading: false,
                 error: null

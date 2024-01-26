@@ -15,7 +15,7 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import { createCommentAction } from '../../Redux/Post/post.action';
+import { createCommentAction, likePostAction } from '../../Redux/Post/post.action';
 import { useDispatch, useSelector } from 'react-redux';
 
 const PostCard = ({ item }) => {
@@ -30,6 +30,10 @@ const PostCard = ({ item }) => {
         }
         dispatch(createCommentAction(reqData))
 
+    }
+
+    const handleLikePost=()=>{
+        dispatch(likePostAction(item.id))
     }
 
     const handleShowComments=()=>setShowComments(!showComments)
@@ -62,8 +66,8 @@ const PostCard = ({ item }) => {
             </CardContent>
             <CardActions disableSpacing className='flex justify-between'>
                 <div>
-                    <IconButton aria-label="add to favorites">
-                        {true ? <FavoriteBorderIcon /> : <FavoriteIcon />}
+                    <IconButton onClick={handleLikePost} aria-label="add to favorites">
+                        {false ? <FavoriteIcon />:<FavoriteBorderIcon />}
                     </IconButton>
                     <IconButton aria-label="comment" onClick={handleShowComments}>
                         {true ? <ChatBubbleOutlineIcon /> : <ChatBubbleIcon />}

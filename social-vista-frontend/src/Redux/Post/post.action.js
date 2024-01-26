@@ -51,7 +51,7 @@ export const getUsersPostAction=(userId)=>async(dispatch)=>{
 export const likePostAction=(postId)=>async(dispatch)=>{
     dispatch({type:LIKE_POST_REQUEST})
     try {
-        const {data}=await api.get(`/api/like/post/${postId}`)
+        const {data}=await api.put(`/api/like/post/${postId}`)
         dispatch({type:LIKE_POST_SUCCESS,payload:data})
         console.log("post liked------",data)
     } catch (error) {
