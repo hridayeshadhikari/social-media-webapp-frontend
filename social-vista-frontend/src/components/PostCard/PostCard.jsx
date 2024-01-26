@@ -16,9 +16,10 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { createCommentAction } from '../../Redux/Post/post.action';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const PostCard = ({ item }) => {
+
     const [showComments,setShowComments]=useState(false)
     const dispatch=useDispatch();
     const handleCreateComment=(description)=>{
@@ -90,16 +91,17 @@ const PostCard = ({ item }) => {
                 </div>
                 <Divider />
                 <div className='mx-3 space-y-2 my-2 text-xs'>
+                    { item.comments?.map((comment)=>
                     <div className=' flex justify-between items-center'>
                         <div className='flex items-center space-x-5' >
                             <Avatar sx={{ height: "2rem", width: "2rem", fontSize: ".8rem" }}>
-                                C
+                                
                             </Avatar>
-                            <p>nice image</p>
+                            <p>{comment.description}</p>
 
                         </div>
 
-                    </div>
+                    </div>)}
 
                 </div>
             </section>}

@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllPostAction } from '../../Redux/Post/post.action';
 
 const story=[11,1,1,1,1,1];
-const post=[1,2,2,1,1,1,1,];
 
 const MiddlePart = () => {
 
@@ -25,7 +24,7 @@ const MiddlePart = () => {
 
   useEffect(()=>{
     dispatch(getAllPostAction())
-  },[])
+  },[post.newComment])
 
   return (
     <div className='px-20'>
