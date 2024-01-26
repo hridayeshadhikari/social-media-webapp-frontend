@@ -6,6 +6,7 @@ const initialState = {
     loading: false,
     posts: [],
     like: null,
+    comments:[]
 }
 export const postReducer = (state = initialState, action) => {
     switch (action.type) {

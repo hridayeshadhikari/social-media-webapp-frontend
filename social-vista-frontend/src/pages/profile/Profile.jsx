@@ -7,7 +7,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import PostCard from '../../components/PostCard/PostCard'
 import ReelCard from '../../components/ReelCard/ReelCard';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ProfileModal from './ProfileModal';
 
 const tabs = [{ value: "post", name: "Posts" },
@@ -21,7 +21,7 @@ const savePost = [1, 1, 1, 1, 1];
 
 const Profile = () => {
   const [value, setValue] = React.useState('post');
-
+  const dispatch=useDispatch();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
