@@ -17,10 +17,13 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { createCommentAction, likePostAction } from '../../Redux/Post/post.action';
 import { useDispatch, useSelector } from 'react-redux';
+import { store } from '../../Redux/store';
+import { isPostLiked } from '../../Utils/isPostLiked';
 
 const PostCard = ({ item }) => {
 
     const [showComments,setShowComments]=useState(false)
+    const {auth,post}=useSelector(store=>store)
     const dispatch=useDispatch();
     const handleCreateComment=(description)=>{
         const reqData={
@@ -37,6 +40,7 @@ const PostCard = ({ item }) => {
     }
 
     const handleShowComments=()=>setShowComments(!showComments)
+
     return (
         <Card className=''>
             <CardHeader
@@ -53,12 +57,7 @@ const PostCard = ({ item }) => {
                 title={item.user.firstName + " " + item.user.lastName}
                 subheader={"@" + item.user.firstName.toLowerCase() + "_" + item.user.lastName.toLowerCase()}
             />
-            <CardMedia
-                component="img"
-                height="194"
-                image={item.image}
-                alt="Paella dish"
-            />
+            <img className='w-full max-h-[35rem] object-cover object-top' src={item.image} alt="" />
             <CardContent>
                 <Typography variant="body2" color="text.secondary">
                     {item.caption}
@@ -67,7 +66,7 @@ const PostCard = ({ item }) => {
             <CardActions disableSpacing className='flex justify-between'>
                 <div>
                     <IconButton onClick={handleLikePost} aria-label="add to favorites">
-                        {false ? <FavoriteIcon />:<FavoriteBorderIcon />}
+                        {isPostLiked(auth.user.id,item) ? <FavoriteIcon />:<FavoriteBorderIcon />}
                     </IconButton>
                     <IconButton aria-label="comment" onClick={handleShowComments}>
                         {true ? <ChatBubbleOutlineIcon /> : <ChatBubbleIcon />}
