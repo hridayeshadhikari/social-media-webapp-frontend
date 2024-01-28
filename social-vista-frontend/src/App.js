@@ -6,6 +6,7 @@ import Authentication from './pages/authentication/Authentication';
 import {Route,Routes,} from "react-router-dom";
 import { useEffect } from 'react';
 import { getProfileAction } from './Redux/Auth/auth.action';
+import Message from './pages/Message/Message';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
     
         <Route path='/a' element={<Authentication/>}></Route>
         <Route path='/*' element={auth.user?<Home/>:<Authentication/>}></Route>
+        <Route path='/message' element={<Message/>}></Route>
 
       </Routes>  
       

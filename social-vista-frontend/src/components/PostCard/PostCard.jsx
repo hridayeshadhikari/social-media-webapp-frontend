@@ -18,7 +18,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { createCommentAction, likePostAction } from '../../Redux/Post/post.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { store } from '../../Redux/store';
-import { isPostLiked } from '../../Utils/isPostLiked';
+import { isPostLiked, numberOfLikes } from '../../Utils/isPostLiked';
 
 const PostCard = ({ item }) => {
 
@@ -74,6 +74,7 @@ const PostCard = ({ item }) => {
                     <IconButton aria-label="share">
                         <ShareIcon />
                     </IconButton>
+                    <div className='ml-3 font-semibold text-[#616161]'>{numberOfLikes(item)} likes</div>
                 </div>
                 <div>
                     <IconButton aria-label="share">
