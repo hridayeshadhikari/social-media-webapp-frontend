@@ -3,6 +3,9 @@ import React from 'react'
 import WestIcon from '@mui/icons-material/West';
 import SendIcon from '@mui/icons-material/Send';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import SearchUser from '../../components/SearchUser/SearchUser';
+import UserChatCard from './UserChatCard';
+import ChatMessage from './ChatMessage';
 
 const Message = () => {
 
@@ -24,9 +27,10 @@ const Message = () => {
 
 
                 <div>
-                  <h1>Search User</h1>
+                  <SearchUser/>
                 </div>
-                <div className='h-full space-y-4 mt-5 overflow-y-scroll hideScrollbar'>UserChatCard
+                <div className='h-full space-y-4 mt-5 overflow-y-scroll hideScrollbar'>
+                  <UserChatCard/>
                 </div>
               </div>
             </div>
@@ -42,7 +46,8 @@ const Message = () => {
 
 
             </div>
-            <div className='hideScrollBar overflow-y-scroll h-[82vh] space-y-5 py-5 px-6'>Messages
+            <div className='hideScrollBar overflow-y-scroll h-[82vh] space-y-5 py-5 px-6'>
+              <ChatMessage/>
 
             </div>
           </div>
@@ -50,13 +55,14 @@ const Message = () => {
             <div className='py-5 flex items-center justify-center space-x-5'>
               <input className=' bg-transparent border border-grey rounded-full w-[90%] py-3 px-5'
                 type="text" placeholder='Enter Message . . . . .' />
-              <SendIcon />
+              
               <div>
                 <input type="file" accept='image/*' onChange={handleSelectImage} className='hidden' id="image-inp" />
                 <label htmlFor="image-inp" >
                   <AddPhotoAlternateIcon />
                 </label>
               </div>
+              <SendIcon />
 
             </div>
 
