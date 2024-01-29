@@ -1,5 +1,7 @@
 import { Avatar, Card, CardHeader } from '@mui/material'
 import React, { useState } from 'react'
+import { searchUser } from '../../Redux/Auth/auth.action';
+import { useDispatch } from 'react-redux';
 
 
 const SearchUser = () => {
@@ -8,10 +10,12 @@ const SearchUser = () => {
   const handleSearchUser = (e) => {
     setUsername(e.target.value)
     console.log("search user....")
+    dispatch(searchUser(username))
   }
   const handleClick = (id) => {
     console.log(id)
   }
+  const dispatch = useDispatch()
   return (
     <div>
       <div className='py-5 relative '>

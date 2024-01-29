@@ -3,75 +3,75 @@ import { CREATE_COMMENT_FAILURE, CREATE_COMMENT_REQUEST, CREATE_COMMENT_SUCCESS,
 
 //action for creating the post
 
-export const createPostAction=(postData)=>async(dispatch)=>{
-    dispatch({type:CREATE_POST_REQUEST})
+export const createPostAction = (postData) => async (dispatch) => {
+    dispatch({ type: CREATE_POST_REQUEST })
     try {
-        const {data}=await api.post("/api/post",postData)
-        dispatch({type:CREATE_POST_SUCCESS,payload:data})
-        console.log("created post------",data)
+        const { data } = await api.post("/api/post", postData)
+        dispatch({ type: CREATE_POST_SUCCESS, payload: data })
+        console.log("created post------", data)
     } catch (error) {
-        console.log("error",error)
-        dispatch({type:CREATE_POST_FAILURE,payload:error})
-        
+        console.log("error", error)
+        dispatch({ type: CREATE_POST_FAILURE, payload: error })
+
     }
 }
 
 //action for getting all the post that are posted
 
-export const getAllPostAction=()=>async(dispatch)=>{
-    dispatch({type:GET_ALL_POST_REQUEST})
+export const getAllPostAction = () => async (dispatch) => {
+    dispatch({ type: GET_ALL_POST_REQUEST })
     try {
-        const {data}=await api.get("/api/user/posts")
-        dispatch({type:GET_ALL_POST_SUCCESS,payload:data})
-        console.log("get all post------",data)
+        const { data } = await api.get("/api/user/posts")
+        dispatch({ type: GET_ALL_POST_SUCCESS, payload: data })
+        console.log("get all post------", data)
     } catch (error) {
-        console.log("error",error)
-        dispatch({type:GET_ALL_POST_FAILURE,payload:error})
-        
+        console.log("error", error)
+        dispatch({ type: GET_ALL_POST_FAILURE, payload: error })
+
     }
 }
 
 // action for getting all the post of particular user
 
-export const getUsersPostAction=(userId)=>async(dispatch)=>{
-    dispatch({type:GET_USERS_POST_REQUEST})
+export const getUsersPostAction = (userId) => async (dispatch) => {
+    dispatch({ type: GET_USERS_POST_REQUEST })
     try {
-        const {data}=await api.get(`/api/user/post/${userId}`)
-        dispatch({type:GET_USERS_POST_SUCCESS,payload:data})
-        console.log("users post------",data)
+        const { data } = await api.get(`/api/user/post/${userId}`)
+        dispatch({ type: GET_USERS_POST_SUCCESS, payload: data })
+        console.log("users post------", data)
     } catch (error) {
-        console.log("error",error)
-        dispatch({type:GET_USERS_POST_FAILURE,payload:error})
-        
+        console.log("error", error)
+        dispatch({ type: GET_USERS_POST_FAILURE, payload: error })
+
     }
 }
 
 //action for like post
 
-export const likePostAction=(postId)=>async(dispatch)=>{
-    dispatch({type:LIKE_POST_REQUEST})
+export const likePostAction = (postId) => async (dispatch) => {
+    dispatch({ type: LIKE_POST_REQUEST })
     try {
-        const {data}=await api.put(`/api/like/post/${postId}`)
-        dispatch({type:LIKE_POST_SUCCESS,payload:data})
-        console.log("post liked------",data)
+        const { data } = await api.put(`/api/like/post/${postId}`)
+        dispatch({ type: LIKE_POST_SUCCESS, payload: data })
+        console.log("post liked------", data)
     } catch (error) {
-        console.log("error",error)
-        dispatch({type:LIKE_POST_FAILURE,payload:error})
-        
+        console.log("error", error)
+        dispatch({ type: LIKE_POST_FAILURE, payload: error })
+
     }
 }
 
 //create comment action
 
-export const createCommentAction=(reqData)=>async(dispatch)=>{
-    dispatch({type:CREATE_COMMENT_REQUEST})
+export const createCommentAction = (reqData) => async (dispatch) => {
+    dispatch({ type: CREATE_COMMENT_REQUEST })
     try {
-        const {data}=await api.post(`/api/post/comment/${reqData.postId}`,reqData.data)
-        dispatch({type:CREATE_COMMENT_SUCCESS,payload:data})
-        console.log(" comment created------",data)
+        const { data } = await api.post(`/api/post/comment/${reqData.postId}`, reqData.data)
+        dispatch({ type: CREATE_COMMENT_SUCCESS, payload: data })
+        console.log(" comment created------", data)
     } catch (error) {
-        console.log("error",error)
-        dispatch({type:CREATE_COMMENT_FAILURE,payload:error})
-        
+        console.log("error", error)
+        dispatch({ type: CREATE_COMMENT_FAILURE, payload: error })
+
     }
 }

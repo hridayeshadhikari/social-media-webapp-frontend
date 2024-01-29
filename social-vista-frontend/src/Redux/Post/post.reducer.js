@@ -7,7 +7,7 @@ const initialState = {
     posts: [],
     like: null,
     comments: [],
-    newComment:null
+    newComment: null
 }
 export const postReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -33,7 +33,7 @@ export const postReducer = (state = initialState, action) => {
 
         case CREATE_COMMENT_SUCCESS:
             return {
-                ...state,newComment:action.payload,loading:false,error:null
+                ...state, newComment: action.payload, loading: false, error: null
             }
 
         case CREATE_POST_FAILURE:
