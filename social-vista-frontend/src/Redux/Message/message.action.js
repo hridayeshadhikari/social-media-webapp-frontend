@@ -4,7 +4,7 @@ import { CREATE_CHAT_FAILURE, CREATE_CHAT_REQUEST, CREATE_CHAT_SUCCESS, CREATE_M
 export const createMessage = (message) => async (dispatch) => {
     dispatch({ type: CREATE_MESSAGE_REQUEST })
     try {
-        const { data } = await api.post(`api/message/messages/chat/${chatId}`, message);
+        const { data } = await api.post(`api/message/messages/chat/`, message);
         console.log("message created", data)
         dispatch({ type: CREATE_MESSAGE_SUCCESS, payload: data })
     } catch (error) {
@@ -14,7 +14,7 @@ export const createMessage = (message) => async (dispatch) => {
     }
 }
 
-export const createChat = (message) => async (dispatch) => {
+export const createChat = (chat) => async (dispatch) => {
     dispatch({ type: CREATE_CHAT_REQUEST })
     try {
         const { data } = await api.post(`api/chats`, chat);
@@ -27,10 +27,10 @@ export const createChat = (message) => async (dispatch) => {
     }
 }
 
-export const allChatOfUser = (message) => async (dispatch) => {
+export const allChatOfUser = () => async (dispatch) => {
     dispatch({ type: GET_ALL_CHAT_REQUEST })
     try {
-        const { data } = await api.get(`api/chats`, chat);
+        const { data } = await api.get(`api/chats`);
         console.log("message created", data)
         dispatch({ type: GET_ALL_CHAT_SUCCESS, payload: data })
     } catch (error) {

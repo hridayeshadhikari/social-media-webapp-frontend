@@ -1,16 +1,37 @@
 import { Avatar, Grid, IconButton } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import WestIcon from '@mui/icons-material/West';
 import SendIcon from '@mui/icons-material/Send';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import SearchUser from '../../components/SearchUser/SearchUser';
 import UserChatCard from './UserChatCard';
 import ChatMessage from './ChatMessage';
+import { useDispatch, useSelector } from 'react-redux';
+import { allChatOfUser } from '../../Redux/Message/message.action';
 
 const Message = () => {
 
+  const dispatch = useDispatch()
+  const { auth, message } = useSelector(store => store)
+  const [currentChat, setCurrentChat] = useState();
+  const [messages, setMessages] = useState();
+  const [selectedImage, setSelectedImage] = useState();
+
+  useEffect(() => {
+    dispatch(allChatOfUser())
+  }, [])
+  console.log("chat--------", message.chats)
+
   const handleSelectImage = () => {
     console.log("handle select image")
+  }
+
+  const handleCreateMessage = (value) => {
+    const message = {
+      chatId: currentChat.id,
+      content: value,
+      image: selectedImage
+    }
   }
   return (
     <div>
@@ -27,10 +48,22 @@ const Message = () => {
 
 
                 <div>
-                  <SearchUser/>
+                  <SearchUser />
                 </div>
                 <div className='h-full space-y-4 mt-5 overflow-y-scroll hideScrollbar'>
-                  <UserChatCard/>
+                  {
+                    message.chats.map((item) => {
+
+                      return <div onClick={() => {
+                        setCurrentChat(item)
+                        setMessages(item.messages)
+                      }}>
+
+                        <UserChatCard chat={item} />
+                      </div>
+                    })
+
+                  }
                 </div>
               </div>
             </div>
@@ -47,7 +80,7 @@ const Message = () => {
 
             </div>
             <div className='hideScrollBar overflow-y-scroll h-[82vh] space-y-5 py-5 px-6'>
-              <ChatMessage/>
+              <ChatMessage />
 
             </div>
           </div>
@@ -55,7 +88,7 @@ const Message = () => {
             <div className='py-5 flex items-center justify-center space-x-5'>
               <input className=' bg-transparent border border-grey rounded-full w-[90%] py-3 px-5'
                 type="text" placeholder='Enter Message . . . . .' />
-              
+
               <div>
                 <input type="file" accept='image/*' onChange={handleSelectImage} className='hidden' id="image-inp" />
                 <label htmlFor="image-inp" >
