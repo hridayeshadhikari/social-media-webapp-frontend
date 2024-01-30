@@ -12,6 +12,9 @@ import { allChatOfUser, createMessage } from '../../Redux/Message/message.action
 import { UploadToCloud } from '../../Utils/UploadToCloud';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Link } from 'react-router-dom'
+import SockJS from 'sockjs-client';
+import Stom from 'stompjs';
 
 const Message = () => {
 
@@ -21,6 +24,22 @@ const Message = () => {
   const [messages, setMessages] = useState([]);
   const [selectedImage, setSelectedImage] = useState();
   const [loading, setLoading] = useState(false);
+  const [stompClient,setStompClient]=useState(null)
+
+  useEffect(()=>{
+    const sock=new SockJS("http://localhost:1212/ws")
+    const stomp=Stom.over(sock)
+    setStompClient(stomp);
+
+    stomp.connect({},onConnect,onError)
+  },[])
+
+  const onConnect=()=>{
+    console.log("WebSocket Connected....");
+  }
+  const onError=(error)=>{
+    console.log("error...",error)
+  }
 
   useEffect(() => {
     dispatch(allChatOfUser())
@@ -45,8 +64,29 @@ const Message = () => {
       content: value,
       image: selectedImage,
     }
-    dispatch(createMessage(message))
+    dispatch(createMessage({message,sendMessageToServer}))
   };
+
+  useEffect(()=>{
+    if(stompClient && auth.user && currentChat){
+      const subscription=stompClient.subscribe(`/user/${currentChat.id}/private`,
+      onMessageReceive)
+    }
+  })
+
+  const sendMessageToServer=(newMessage)=>{
+    if(stompClient && newMessage){
+      stompClient.send(`/app/chat/${currentChat?.id.toString()}`,{},JSON.stringify(newMessage))
+    }
+  }
+
+  const onMessageReceive=(payload)=>{
+    
+    const receivedMessage=JSON.parse(payload.body)
+    console.log("message receive from websocket",receivedMessage)
+    setMessages([...messages,receivedMessage])
+  }
+  
   return (
     <div>
       <Grid container className='h-screen overflow-y-hidden'>
@@ -54,7 +94,7 @@ const Message = () => {
           <div className='flex space-x-2 justify-between h-full'>
             <div className='w-full'>
               <div className='flex space-x-4 item-center py-5'>
-                <WestIcon />
+                 <Link to="/"><WestIcon/></Link>
                 <h1 className='font-bold'>Home</h1>
 
               </div>
