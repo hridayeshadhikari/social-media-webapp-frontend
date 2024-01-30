@@ -7,32 +7,46 @@ import SearchUser from '../../components/SearchUser/SearchUser';
 import UserChatCard from './UserChatCard';
 import ChatMessage from './ChatMessage';
 import { useDispatch, useSelector } from 'react-redux';
-import { allChatOfUser } from '../../Redux/Message/message.action';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { allChatOfUser, createMessage } from '../../Redux/Message/message.action';
+import { UploadToCloud } from '../../Utils/UploadToCloud';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Message = () => {
 
   const dispatch = useDispatch()
   const { auth, message } = useSelector(store => store)
   const [currentChat, setCurrentChat] = useState();
-  const [messages, setMessages] = useState();
+  const [messages, setMessages] = useState([]);
   const [selectedImage, setSelectedImage] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     dispatch(allChatOfUser())
   }, [])
   console.log("chat--------", message.chats)
 
-  const handleSelectImage = () => {
+  const handleSelectImage = async (e) => {
+    setLoading(true)
     console.log("handle select image")
-  }
+    const imgUrl = await UploadToCloud(e.target.files[0], "image")
+    setSelectedImage(imgUrl)
+    setLoading(false)
+  };
+
+  useEffect(() => {
+    setMessages([...messages, message.message])
+  }, [message.message])
 
   const handleCreateMessage = (value) => {
     const message = {
-      chatId: currentChat.id,
+      chatId: currentChat?.id,
       content: value,
-      image: selectedImage
+      image: selectedImage,
     }
-  }
+    dispatch(createMessage(message))
+  };
   return (
     <div>
       <Grid container className='h-screen overflow-y-hidden'>
@@ -70,42 +84,64 @@ const Message = () => {
           </div>
         </Grid>
         <Grid className='h-full' item xs={9}>
-          <div>
+          {currentChat ? <div>
             <div className='flex justify-between items-center border-l p-5'>
               <div className='flex items-center space-x-3 '>
                 <Avatar src='https://images.pexels.com/photos/1559486/pexels-photo-1559486.jpeg?auto=compress&cs=tinysrgb&w=600' />
-                <p>Hridayesh Adhikari</p>
+                <p>{auth.user?.id === currentChat.users[0]?.id ? currentChat.users[1].firstName + " " +
+                  currentChat.users[1].lastName : currentChat.users[0].firstName + " " + currentChat.users[0].lastName}</p>
               </div>
 
 
             </div>
             <div className='hideScrollBar overflow-y-scroll h-[82vh] space-y-5 py-5 px-6'>
-              <ChatMessage />
+              {
+                messages.map((item) => <ChatMessage item={item} />
+                )}
 
             </div>
-          </div>
-          <div className='sticky bottom-0 border-l'>
-            <div className='py-5 flex items-center justify-center space-x-5'>
-              <input className=' bg-transparent border border-grey rounded-full w-[90%] py-3 px-5'
-                type="text" placeholder='Enter Message . . . . .' />
+            <div className='sticky bottom-0 border-l'>
+              {selectedImage && <img className='w-[8rem] h-[10rem] object-cover px-2' src={selectedImage} alt='' />}
+              <div className='py-5 flex items-center justify-center space-x-5'>
+                <input
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter" && e.target.value) {
+                      handleCreateMessage(e.target.value)
+                      setSelectedImage("");
+                      
+                    }
+                  }}
+                  className=' bg-transparent border border-grey rounded-full w-[90%] py-3 px-5'
+                  type="text" placeholder='Enter Message . . . . .' />
 
-              <div>
-                <input type="file" accept='image/*' onChange={handleSelectImage} className='hidden' id="image-inp" />
-                <label htmlFor="image-inp" >
-                  <AddPhotoAlternateIcon />
-                </label>
+                <div>
+                  <input type="file" accept='image/*' onChange={handleSelectImage} className='hidden' id="image-inp" />
+                  <label htmlFor="image-inp" >
+                    <AddPhotoAlternateIcon />
+                  </label>
+                </div>
+                <SendIcon />
+
               </div>
-              <SendIcon />
+
+
 
             </div>
+          </div> : <div className='h-full space-y-5  flex flex-col justify-center items-center'>
+            <ChatBubbleOutlineIcon sx={{ fontSize: "15rem" }} />
+            <p className='text-xl font-semibold'>no chat selected</p>
+          </div>}
 
-
-
-          </div>
 
         </Grid>
 
       </Grid>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
     </div>
   )

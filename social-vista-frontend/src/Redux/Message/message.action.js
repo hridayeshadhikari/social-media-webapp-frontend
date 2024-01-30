@@ -4,7 +4,7 @@ import { CREATE_CHAT_FAILURE, CREATE_CHAT_REQUEST, CREATE_CHAT_SUCCESS, CREATE_M
 export const createMessage = (message) => async (dispatch) => {
     dispatch({ type: CREATE_MESSAGE_REQUEST })
     try {
-        const { data } = await api.post(`api/message/messages/chat/`, message);
+        const { data } = await api.post(`api/messages/chat/${message.chatId}`, message);
         console.log("message created", data)
         dispatch({ type: CREATE_MESSAGE_SUCCESS, payload: data })
     } catch (error) {
