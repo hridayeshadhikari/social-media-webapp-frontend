@@ -1,5 +1,5 @@
 import { Avatar, Grid, IconButton } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import WestIcon from '@mui/icons-material/West';
 import SendIcon from '@mui/icons-material/Send';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -24,21 +24,28 @@ const Message = () => {
   const [messages, setMessages] = useState([]);
   const [selectedImage, setSelectedImage] = useState();
   const [loading, setLoading] = useState(false);
-  const [stompClient,setStompClient]=useState(null)
+  const [stompClient, setStompClient] = useState(null);
+  const chatContainerRef = useRef(null);
 
-  useEffect(()=>{
-    const sock=new SockJS("http://localhost:1212/ws")
-    const stomp=Stom.over(sock)
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages])
+
+  useEffect(() => {
+    const sock = new SockJS("http://localhost:1212/ws")
+    const stomp = Stom.over(sock)
     setStompClient(stomp);
 
-    stomp.connect({},onConnect,onError)
-  },[])
+    stomp.connect({}, onConnect, onError)
+  }, [])
 
-  const onConnect=()=>{
+  const onConnect = () => {
     console.log("WebSocket Connected....");
   }
-  const onError=(error)=>{
-    console.log("error...",error)
+  const onError = (error) => {
+    console.log("error...", error)
   }
 
   useEffect(() => {
@@ -64,29 +71,30 @@ const Message = () => {
       content: value,
       image: selectedImage,
     }
-    dispatch(createMessage({message,sendMessageToServer}))
+    dispatch(createMessage({ message, sendMessageToServer }))
   };
 
-  useEffect(()=>{
-    if(stompClient && auth.user && currentChat){
-      const subscription=stompClient.subscribe(`/user/${currentChat.id}/private`,
-      onMessageReceive)
+  useEffect(() => {
+    if (stompClient && auth.user && currentChat) {
+      const subscription = stompClient.subscribe(`/user/${currentChat.id}/private`,
+        onMessageReceive)
     }
-  })
+  },[stompClient, auth.user, currentChat])
 
-  const sendMessageToServer=(newMessage)=>{
-    if(stompClient && newMessage){
-      stompClient.send(`/app/chat/${currentChat?.id.toString()}`,{},JSON.stringify(newMessage))
+  const sendMessageToServer = (newMessage) => {
+    if (stompClient && newMessage) {
+      stompClient.send(`/app/chat/${currentChat?.id.toString()}`, {}, 
+      JSON.stringify(newMessage))
     }
   }
 
-  const onMessageReceive=(payload)=>{
-    
-    const receivedMessage=JSON.parse(payload.body)
-    console.log("message receive from websocket",receivedMessage)
-    setMessages([...messages,receivedMessage])
+  const onMessageReceive = (payload) => {
+
+    const receivedMessage = JSON.parse(payload.body)
+    console.log("message receive from websocket", receivedMessage)
+    setMessages(messages=>[...messages, receivedMessage])
   }
-  
+
   return (
     <div>
       <Grid container className='h-screen overflow-y-hidden'>
@@ -94,7 +102,7 @@ const Message = () => {
           <div className='flex space-x-2 justify-between h-full'>
             <div className='w-full'>
               <div className='flex space-x-4 item-center py-5'>
-                 <Link to="/"><WestIcon/></Link>
+                <Link to="/"><WestIcon /></Link>
                 <h1 className='font-bold'>Home</h1>
 
               </div>
@@ -134,7 +142,7 @@ const Message = () => {
 
 
             </div>
-            <div className='hideScrollBar overflow-y-scroll h-[82vh] space-y-5 py-5 px-6'>
+            <div ref={chatContainerRef} className='hideScrollBar overflow-y-scroll h-[82vh] space-y-5 py-5 px-6'>
               {
                 messages.map((item) => <ChatMessage item={item} />
                 )}
@@ -148,7 +156,7 @@ const Message = () => {
                     if (e.key === "Enter" && e.target.value) {
                       handleCreateMessage(e.target.value)
                       setSelectedImage("");
-                      
+
                     }
                   }}
                   className=' bg-transparent border border-grey rounded-full w-[90%] py-3 px-5'
