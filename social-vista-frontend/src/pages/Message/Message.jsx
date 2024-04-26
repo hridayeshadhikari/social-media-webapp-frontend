@@ -26,6 +26,7 @@ const Message = () => {
   const [loading, setLoading] = useState(false);
   const [stompClient, setStompClient] = useState(null);
   const chatContainerRef = useRef(null);
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -65,13 +66,17 @@ const Message = () => {
     setMessages([...messages, message.message])
   }, [message.message])
 
-  const handleCreateMessage = (value) => {
-    const message = {
-      chatId: currentChat?.id,
-      content: value,
-      image: selectedImage,
+  const handleCreateMessage = () => {
+    if (inputValue.trim() !== "") { // Check if input value is not empty
+      const message = {
+        chatId: currentChat?.id,
+        content: inputValue,
+        image: selectedImage,
+      };
+      dispatch(createMessage({ message, sendMessageToServer }));
+      setInputValue(""); // Clear the input box
+      setSelectedImage(""); // Clear selected image
     }
-    dispatch(createMessage({ message, sendMessageToServer }))
   };
 
   useEffect(() => {
@@ -79,12 +84,12 @@ const Message = () => {
       const subscription = stompClient.subscribe(`/user/${currentChat.id}/private`,
         onMessageReceive)
     }
-  },[stompClient, auth.user, currentChat])
+  }, [stompClient, auth.user, currentChat])
 
   const sendMessageToServer = (newMessage) => {
     if (stompClient && newMessage) {
-      stompClient.send(`/app/chat/${currentChat?.id.toString()}`, {}, 
-      JSON.stringify(newMessage))
+      stompClient.send(`/app/chat/${currentChat?.id.toString()}`, {},
+        JSON.stringify(newMessage))
     }
   }
 
@@ -92,7 +97,7 @@ const Message = () => {
 
     const receivedMessage = JSON.parse(payload.body)
     console.log("message receive from websocket", receivedMessage)
-    setMessages(messages=>[...messages, receivedMessage])
+    setMessages(messages => [...messages, receivedMessage])
   }
 
   return (
@@ -142,7 +147,7 @@ const Message = () => {
 
 
             </div>
-            <div ref={chatContainerRef} className='hideScrollBar overflow-y-scroll h-[82vh] space-y-5 py-5 px-6'>
+            <div ref={chatContainerRef} className='hideScrollBar overflow-y-scroll h-[75vh] space-y-5 py-5 px-6'>
               {
                 messages.map((item) => <ChatMessage item={item} />
                 )}
@@ -152,23 +157,29 @@ const Message = () => {
               {selectedImage && <img className='w-[8rem] h-[10rem] object-cover px-2' src={selectedImage} alt='' />}
               <div className='py-5 flex items-center justify-center space-x-5'>
                 <input
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)} // Update input value
                   onKeyPress={(e) => {
-                    if (e.key === "Enter" && e.target.value) {
-                      handleCreateMessage(e.target.value)
-                      setSelectedImage("");
-
+                    if (e.key === "Enter") {
+                      handleCreateMessage();
                     }
                   }}
                   className=' bg-transparent border border-grey rounded-full w-[90%] py-3 px-5'
-                  type="text" placeholder='Enter Message . . . . .' />
+                  type="text"
+                  placeholder='Enter Message . . . . .'
+                />
 
                 <div>
                   <input type="file" accept='image/*' onChange={handleSelectImage} className='hidden' id="image-inp" />
                   <label htmlFor="image-inp" >
-                    <AddPhotoAlternateIcon />
+                    <AddPhotoAlternateIcon sx={{ color: "gray" }} />
                   </label>
                 </div>
-                <SendIcon />
+                <div>
+                  <IconButton onClick={handleCreateMessage}>
+                    <SendIcon />
+                  </IconButton>
+                </div>
 
               </div>
 
