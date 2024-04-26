@@ -29,7 +29,7 @@ const SearchUser = () => {
 
         {
           username && (
-            auth.searchUser.map((item) =>
+            auth?.searchUser?.map((item) =>
               <Card key={item.id} className='absolute w-full z-10 top-[4.5rem] cursor-pointer'>
                 <CardHeader
                  onClick={() => {
