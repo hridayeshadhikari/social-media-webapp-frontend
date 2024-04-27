@@ -1,5 +1,5 @@
 import { API_BASE_URL, api } from "../../config/api"
-import { GET_PROFILE_FAILURE, GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, REGISTER_REQUEST, SEARCH_USER_FAILURE, SEARCH_USER_REQUEST, SEARCH_USER_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_REQUEST, UPDATE_PROFILE_SUCCESS } from "./auth.actionType"
+import { GET_PROFILE_FAILURE, GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_REQUEST, SEARCH_USER_FAILURE, SEARCH_USER_REQUEST, SEARCH_USER_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_REQUEST, UPDATE_PROFILE_SUCCESS } from "./auth.actionType"
 import axios from 'axios';
 
 
@@ -98,4 +98,9 @@ export const searchUser = (query) => async (dispatch) => {
         dispatch({ type: SEARCH_USER_FAILURE, payload: error })
     };
 
+}
+
+export const logout=()=>(dispatch)=>{
+    dispatch({type:LOGOUT,payload:null})
+    localStorage.clear();
 }

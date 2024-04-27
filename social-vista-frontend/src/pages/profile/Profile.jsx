@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
 import { Button, Card } from '@mui/material';
@@ -9,6 +9,7 @@ import PostCard from '../../components/PostCard/PostCard'
 import ReelCard from '../../components/ReelCard/ReelCard';
 import { useDispatch, useSelector } from 'react-redux';
 import ProfileModal from './ProfileModal';
+import { getUsersPostAction } from '../../Redux/Post/post.action';
 
 const tabs = [{ value: "post", name: "Posts" },
 { value: "reels", name: "Reels" },
@@ -30,8 +31,11 @@ const Profile = () => {
     setValue(newValue);
   };
 
-  const { auth } = useSelector(store => store);
+  const { auth,post } = useSelector(store => store);
   const { id } = useParams();
+  useEffect(()=>{
+    dispatch(getUsersPostAction(auth?.user.id))
+  })
   
   return (
     <Card className='my-10 w-[70%]'>
@@ -50,13 +54,11 @@ const Profile = () => {
             <p>@{auth.user?.firstName.toLowerCase() + "_" + auth.user?.lastName.toLowerCase()}</p>
           </div>
           <div className='flex gap-3 items-center py-3'>
-            <span>41 Post</span>
-            <span>{auth.user?.follower} Follower</span>
-            <span>40 Followings</span>
+            <span>{post?.posts.length} Post</span>
+            <span>{auth?.user.followers.length} Follower</span>
+            <span>{auth?.user.following.length} Followings</span>
           </div>
-          <div>
-            <p>my name is hridayesh adhikari</p>
-          </div>
+          
 
         </div>
         <section>
@@ -71,8 +73,8 @@ const Profile = () => {
           </Box>
           <div className='flex justify-center'>
             {value === "post" ? (<div className='space-y-5 w-[70%] my-10'>
-              {posts.map((item) => (<div className='border border-slate-100 rounded-md'>
-                <PostCard />
+              {post?.posts.map((item) => (<div className='border border-slate-100 rounded-md'>
+                <PostCard item={item}/>
               </div>
               ))}
             </div>) : value === "reels" ? <div className='flex gap-2 flex-wrap justify-center'>

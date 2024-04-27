@@ -5,14 +5,15 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CreatePostModal from '../CreatePost/CreatePostModal';
+import { logout } from '../../Redux/Auth/auth.action';
 
 const Sidebar = () => {
 
     const [openCreatePostModal,setOpenCreatePostModal]=React.useState(false);
-
+    const dispatch=useDispatch();
     const handleCloseCreatePostModal=()=>setOpenCreatePostModal(false);
 
     const handleOpenCreatePostModal=()=>{
@@ -43,6 +44,11 @@ const Sidebar = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleLogout=()=>{
+        dispatch(logout())
+        navigate("/login")
+    }
     return (
         <Card className='card h-screen flex flex-col justify-between py-5'>
             <div className='space-y-8 pl-5'>
@@ -91,7 +97,7 @@ const Sidebar = () => {
                     >
                         <MenuItem onClick={handleClose}>Profile</MenuItem>
                         <MenuItem onClick={handleClose}>My account</MenuItem>
-                        <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </Menu>
                 </div>
             </div>

@@ -54,19 +54,19 @@ const PostCard = ({ item }) => {
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title={item.user.firstName + " " + item.user.lastName}
-                subheader={"@" + item.user.firstName.toLowerCase() + "_" + item.user.lastName.toLowerCase()}
+                title={item?.user.firstName + " " + item?.user.lastName}
+                subheader={"@" + item?.user.firstName.toLowerCase() + "_" + item?.user.lastName.toLowerCase()}
             />
-            <img className='w-full max-h-[35rem] object-cover object-top' src={item.image} alt="" />
+            <img className='w-full max-h-[35rem] object-cover object-top' src={item?.image} alt="" />
             <CardContent>
                 <Typography variant="body2" color="text.secondary">
-                    {item.caption}
+                    {item?.caption}
                 </Typography>
             </CardContent>
             <CardActions disableSpacing className='flex justify-between'>
                 <div>
                     <IconButton onClick={handleLikePost} aria-label="add to favorites">
-                        {isPostLiked(auth.user.id,item) ? <FavoriteIcon />:<FavoriteBorderIcon />}
+                        {isPostLiked(auth.user.id,item) ? <FavoriteIcon sx={{color:"red"}}/>:<FavoriteBorderIcon />}
                     </IconButton>
                     <IconButton aria-label="comment" onClick={handleShowComments}>
                         {true ? <ChatBubbleOutlineIcon /> : <ChatBubbleIcon />}
