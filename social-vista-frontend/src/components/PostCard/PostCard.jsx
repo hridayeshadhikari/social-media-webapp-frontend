@@ -4,7 +4,6 @@ import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { red } from '@mui/material/colors';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -15,9 +14,8 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import { createCommentAction, likePostAction } from '../../Redux/Post/post.action';
+import { createCommentAction, likePostAction, savePost } from '../../Redux/Post/post.action';
 import { useDispatch, useSelector } from 'react-redux';
-import { store } from '../../Redux/store';
 import { isPostLiked, numberOfLikes } from '../../Utils/isPostLiked';
 
 const PostCard = ({ item }) => {
@@ -41,6 +39,10 @@ const PostCard = ({ item }) => {
 
     const handleShowComments=()=>setShowComments(!showComments)
 
+    const handleSavePost=()=>{
+        dispatch(savePost(item.id))
+    }
+
     return (
         <Card className=''>
             <CardHeader
@@ -57,7 +59,14 @@ const PostCard = ({ item }) => {
                 title={item?.user.firstName + " " + item?.user.lastName}
                 subheader={"@" + item?.user.firstName.toLowerCase() + "_" + item?.user.lastName.toLowerCase()}
             />
-            <img className='w-full max-h-[35rem] object-cover object-top' src={item?.image} alt="" />
+            {item?.image ? (
+                <img className='w-full max-h-[35rem] object-cover object-top' src={item?.image} alt="" />
+            ) : item?.video ? (
+                <video autoPlay  className='w-full max-h-[35rem]' controls>
+                    <source src={item?.video} type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            ) : null}
             <CardContent>
                 <Typography variant="body2" color="text.secondary">
                     {item?.caption}
@@ -77,8 +86,8 @@ const PostCard = ({ item }) => {
                     <div className='ml-3 font-semibold text-[#616161]'>{numberOfLikes(item)} likes</div>
                 </div>
                 <div>
-                    <IconButton aria-label="share">
-                        {true ? <BookmarkBorderIcon /> : <BookmarkIcon />}
+                    <IconButton aria-label="bookmark" onClick={handleSavePost}>
+                    {post.savePost.includes(item?.id) ? <BookmarkBorderIcon /> : <BookmarkIcon />}
                     </IconButton>
                 </div>
             </CardActions>

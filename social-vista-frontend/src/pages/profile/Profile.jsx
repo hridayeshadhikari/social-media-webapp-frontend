@@ -9,16 +9,14 @@ import PostCard from '../../components/PostCard/PostCard'
 import ReelCard from '../../components/ReelCard/ReelCard';
 import { useDispatch, useSelector } from 'react-redux';
 import ProfileModal from './ProfileModal';
-import { getUsersPostAction } from '../../Redux/Post/post.action';
+import { getSavePost, getUsersPostAction } from '../../Redux/Post/post.action';
 
 const tabs = [{ value: "post", name: "Posts" },
 { value: "reels", name: "Reels" },
 { value: "saved", name: "Saved" },
 { value: "repost", name: "Repost" },
 ]
-const posts = [1, 1, 1, 1, 1];
 const reels = [1, 1, 1, 1, 1, 1];
-const savePost = [1, 1, 1, 1, 1];
 
 const Profile = () => {
   const [value, setValue] = React.useState('post');
@@ -35,7 +33,12 @@ const Profile = () => {
   const { id } = useParams();
   useEffect(()=>{
     dispatch(getUsersPostAction(auth?.user.id))
-  })
+    
+  },[dispatch, auth?.user.id])
+
+  useEffect(()=>{
+    dispatch(getSavePost())
+  },[dispatch])
   
   return (
     <Card className='my-10 w-[70%]'>
@@ -80,8 +83,8 @@ const Profile = () => {
             </div>) : value === "reels" ? <div className='flex gap-2 flex-wrap justify-center'>
               {reels.map((item) => <ReelCard />)}
             </div> : value === "saved" ? <div className='space-y-5 w-[70%] my-10'>
-              {savePost.map((item) => (<div className='border border-slate-100 rounded-md'>
-                <PostCard />
+              {post?.savePost.map((item) => (<div className='border border-slate-100 rounded-md'>
+                <PostCard item={item}/>
               </div>))}
             </div> : (
               <div>Repost</div>

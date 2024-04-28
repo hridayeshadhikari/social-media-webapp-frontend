@@ -1,27 +1,47 @@
-const cloud_name="dyxqdduzl"
-const upload_preset="ldv4ylqa";
+const cloud_name = "dyxqdduzl";
+const upload_preset = "ldv4ylqa";
 
+export const UploadToCloud = async (file, fileType) => {
+  if (file && fileType) {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", upload_preset);
+    data.append("cloud_name", cloud_name);
 
+    let uploadUrl;
 
-export const UploadToCloud = async(pics,fileType) => {
-  if(pics && fileType){
-    const data= new FormData();
-    data.append("file",pics);
-    data.append("upload_preset",upload_preset)
-    data.append("cloud_name",cloud_name)
-    const res=await fetch(` https://api.cloudinary.com/v1_1/${cloud_name}/${fileType}/upload`,
-    {method:"post",body:data}
-    
-    )
-    
-    const fileData =await res.json();
-    console.log("response------",fileData.url);
-    return fileData.url
+    // Determine the upload URL based on the fileType
+    if (fileType.startsWith("image")) {
+      // If fileType starts with "image", it's a photo
+      uploadUrl = `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`;
+    } else if (fileType.startsWith("video")) {
+      // If fileType starts with "video", it's a video
+      uploadUrl = `https://api.cloudinary.com/v1_1/${cloud_name}/video/upload`;
+    } else {
+      console.error("Unsupported file type:", fileType);
+      return null;
+    }
 
+    try {
+      const res = await fetch(uploadUrl, {
+        method: "post",
+        body: data,
+      });
+
+      if (res.ok) {
+        const fileData = await res.json();
+        console.log("Response:", fileData);
+        return fileData.secure_url; // Assuming you want to return the secure URL of the uploaded file
+      } else {
+        console.error("Failed to upload file:", res.statusText);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      return null;
+    }
+  } else {
+    console.error("Error: Missing file or fileType parameter");
+    return null;
   }
-  else{
-    console.log("error")
-  }
-}
-
- 
+};
