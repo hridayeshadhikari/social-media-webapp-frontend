@@ -1,44 +1,48 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Carousel } from 'primereact/carousel';
-import ReelCard from './ReelCard';
+import { getAllReels } from '../../Redux/Reel/reel.action';
+import { useDispatch, useSelector } from 'react-redux';
+import ReelCards from './ReelCards';
 
 export default function Reels() {
-  const reelData = [
-    {
-      id: 1,
-      url: "https://videos.pexels.com/video-files/20770858/20770858-sd_540_960_30fps.mp4"
-    },
-    {
-      id: 2,
-      url: "https://videos.pexels.com/video-files/20770858/20770858-sd_540_960_30fps.mp4"
-    },
-    {
-      id: 3,
-      url: "https://videos.pexels.com/video-files/20770858/20770858-sd_540_960_30fps.mp4"
-    },
-    {
-      id: 4,
-      url: "https://videos.pexels.com/video-files/20770858/20770858-sd_540_960_30fps.mp4"
-    },
-  ];
-    
-    
-    
 
-    const productTemplate = (reelData) => {
-        return (
-            <div>
-               <ReelCard item={reelData.url}/>
-            </div>
-        );
-    };
 
+  const { reel } = useSelector((store) => store)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getAllReels())
+  }, [dispatch])
+
+  // console.log("====>", reel.reel[0])
+
+  // const res=reel.reel.map((item)=>{
+  //   console.log("============",item)
+  // })
+
+  // console.log(res)
+
+
+
+  const productTemplate = (reel) => {
+    console.log("========>",reel)
     return (
-        <div className="card flex justify-content-center">
-            <Carousel value={reelData} numVisible={1} numScroll={1} orientation="vertical" verticalViewPortHeight="550px"
-            itemTemplate={productTemplate} />
-        </div>
-    )
+      <div>
+        {
+          reel?.reel?.map((item) => {
+            <div key={item.id} >
+              <ReelCards item={item.video} />
+            </div>
+          })
+        }
+      </div>
+    );
+  };
+
+  return (
+    <div className="card flex justify-content-center">
+      <Carousel value={reel.reel} numVisible={1} numScroll={1} orientation="vertical" verticalViewPortHeight="550px"
+        itemTemplate={productTemplate} />
+    </div>
+  )
 }
-        
