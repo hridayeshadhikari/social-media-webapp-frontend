@@ -31,7 +31,7 @@ export const UploadToCloud = async (file, fileType) => {
       if (res.ok) {
         const fileData = await res.json();
         console.log("Response:", fileData);
-        return fileData.secure_url; // Assuming you want to return the secure URL of the uploaded file
+        return fileData.secure_url; 
       } else {
         console.error("Failed to upload file:", res.statusText);
         return null;
