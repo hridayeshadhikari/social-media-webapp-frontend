@@ -5,11 +5,13 @@ import { useFormik } from 'formik';
 import { Avatar, Button, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { useNavigate } from "react-router-dom";
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { UploadToCloud } from '../../Utils/UploadToCloud';
 import { createPostAction } from '../../Redux/Post/post.action';
+import { createReel } from '../../Redux/Reel/reel.action';
 
 const style = {
   position: 'absolute',
@@ -27,6 +29,7 @@ const style = {
 
 export default function CreateReelModal({ handleClose, open }) {
   const { auth } = useSelector(store => store)
+  const navigate=useNavigate()
   const formik = useFormik({
     initialValues: {
       caption: "",
@@ -35,29 +38,23 @@ export default function CreateReelModal({ handleClose, open }) {
     },
     onSubmit: (values) => {
       console.log("formik values", values)
-      dispatch(createPostAction(values))
+      dispatch(createReel(values))
+      handleClose()
+      navigate('/reels')
     }
   });
-  const [selectedImage, setSelectedImage] = React.useState();
   const [selectedVideo, setSelectedVideo] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
-  const handleSelectImage = async(event) => {
-    setIsLoading(true)
-    const imageUrl=await UploadToCloud(event.target.files[0],"image")
-    setSelectedImage(imageUrl);
-    setIsLoading(false);
-    formik.setFieldValue("image",imageUrl);
-  }
 
-  const handleSelectVideo = async(event) => { 
+  const handleSelectVideo = async (event) => {
     setIsLoading(true)
-    const videoUrl=await UploadToCloud(event.target.files[0],"video")
+    const videoUrl = await UploadToCloud(event.target.files[0], "video")
     setSelectedVideo(videoUrl);
     setIsLoading(false);
-    formik.setFieldValue("video",videoUrl);
+    formik.setFieldValue("video", videoUrl);
 
   }
 
@@ -82,33 +79,30 @@ export default function CreateReelModal({ handleClose, open }) {
 
               </div>
               <textarea
-              className='w-full mt-5 bg-transparent outline-none border rounded-sm p-2' 
-              placeholder='write caption....' name="caption" onChange={formik.handleChange} value={formik.values.caption} id="" rows="4"></textarea>
+                className='w-full mt-5 bg-transparent outline-none border rounded-sm p-2'
+                placeholder='write caption....' name="caption" onChange={formik.handleChange} value={formik.values.caption} id="" rows="4"></textarea>
               <div className='flex space-x-5 items-center mt-5'>
-                <div>
-                  <input type="file" accept='image/*' onChange={handleSelectImage} style={{ display: "none" }} id='image-input' />
-                  <label htmlFor="image-input">
-                    <IconButton color='primary' component='span'>
-                      <InsertPhotoIcon />
-                    </IconButton>
-                  </label>
-                  <span>Image</span>
-                </div>
+                
                 <div>
                   <input type="file" accept='video/*' onChange={handleSelectVideo} style={{ display: "none" }} id='video-input' />
                   <label htmlFor="video-input">
-                    <IconButton color='primary'>
+                    <IconButton color='primary' component='span'>
                       <VideoCameraBackIcon />
                     </IconButton>
                   </label>
                   <span>Video</span>
                 </div>
               </div>
-              {selectedImage &&
-                <div>
-                  <img className='h-[10rem]' src={selectedImage} alt="" />
-                </div>}
+            
 
+              {selectedVideo && (
+                <div>
+                  <video className='h-[10rem]' controls>
+                    <source src={selectedVideo} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              )}
               <div className='flex w-full justify-end ' >
                 <Button variant="contained" type="submit" sx={{ borderRadius: "1.5rem" }}>Post</Button>
               </div>

@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import { Avatar, Button, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { useNavigate } from "react-router-dom";
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -27,6 +28,7 @@ const style = {
 
 export default function CreatePostModal({ handleClose, open }) {
   const { auth } = useSelector(store => store)
+  const navigate=useNavigate()
   const formik = useFormik({
     initialValues: {
       caption: "",
@@ -36,6 +38,8 @@ export default function CreatePostModal({ handleClose, open }) {
     onSubmit: (values) => {
       console.log("formik values", values)
       dispatch(createPostAction(values))
+      handleClose()
+      navigate('/')
     }
   });
   const [selectedImage, setSelectedImage] = React.useState();
@@ -98,7 +102,7 @@ export default function CreatePostModal({ handleClose, open }) {
                   <input type="file" accept='video/*' onChange={handleSelectVideo} style={{ display: "none" }} id='video-input' />
                   <label htmlFor="video-input">
                     <IconButton color='primary' component='span'>
-                      <InsertPhotoIcon />
+                      <VideoCameraBackIcon />
                     </IconButton>
                   </label>
                   <span>Video</span>

@@ -22,6 +22,7 @@ import { isCommentLiked } from '../../Utils/isCommentLiked';
 const PostCard = ({ item }) => {
 
     const [showComments, setShowComments] = useState(false)
+    const [commentText, setCommentText] = useState('');
     const { auth, post } = useSelector(store => store)
     const dispatch = useDispatch();
     const handleCreateComment = (description) => {
@@ -30,6 +31,7 @@ const PostCard = ({ item }) => {
             data: { description }
         }
         dispatch(createCommentAction(reqData))
+        setCommentText('');
     }
 
     const handleLikePost = () => {
@@ -49,7 +51,7 @@ const PostCard = ({ item }) => {
 
 
     const createdAtDate = new Date(item?.createdAt);
-    console.log("===============", createdAtDate)
+    // console.log("===============", createdAtDate)
     const currentDate = new Date();
     const timeDifferenceMs = currentDate - createdAtDate;
     const daysDifference = timeDifferenceMs / (1000 * 60 * 60 * 24);
@@ -108,7 +110,10 @@ const PostCard = ({ item }) => {
                 <section>
                     <div className='flex items-center space-x-5 mx-3 my-5'>
                         <Avatar sx={{}} />
-                        <input onKeyPress={(e) => {
+                        <input 
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        onKeyPress={(e) => {
                             if (e.key === "Enter") {
                                 handleCreateComment(e.target.value)
                                 console.log("enter pressed...", e.target.value)
@@ -119,26 +124,34 @@ const PostCard = ({ item }) => {
 
                     <div className='mx-3 space-y-2 my-2 text-xs'>
                         <h1 className='font-bold'>Comments....</h1>
-                        {item.comments?.map((comment) =>
-                            <div className=' flex justify-between items-center' key={comment.id}>
-                                <div className='flex items-center space-x-5' >
-                                    <Avatar sx={{ height: "2rem", width: "2rem", fontSize: ".8rem" }}>
-
-                                    </Avatar>
-                                    <div className='flex-col'>
-                                        <h1 className='font-bold'>@{comment.user.firstName}({daysPassed} day ago)</h1>
-                                        <p>{comment.description}</p>
-                                    </div>
-
-                                </div>
-                                <div className='flex-col'>
-                                    <IconButton onClick={() => handleLikeComment(comment.id)} aria-label="like-comment">
-                                        {isCommentLiked(auth.jwt.id, comment) ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon />}
-                                    </IconButton>
-                                    <p className='font-bold'>{comment.liked.length} likes</p>
-                                </div>
-
-                            </div>)}
+                        {
+                            item.comments && item.comments.length>0 ?(
+                                item.comments?.slice().reverse().map((comment) =>
+                                    <div className=' flex justify-between items-center' key={comment.id}>
+                                        <div className='flex items-center space-x-5' >
+                                            <Avatar sx={{ height: "2rem", width: "2rem", fontSize: ".8rem" }}>
+        
+                                            </Avatar>
+                                            <div className='flex-col'>
+                                                <h1 className='font-bold'>
+                                                    @{comment.user.firstName.toLowerCase()}_{comment.user.lastName.toLowerCase()} ( {daysPassed > 1 ? `${daysPassed} day ago` : 'today'} )
+                                                </h1>
+                                                <p>{comment.description}</p>
+                                            </div>
+        
+                                        </div>
+                                        <div className='flex-col'>
+                                            <IconButton onClick={() => handleLikeComment(comment.id)} aria-label="like-comment">
+                                                {isCommentLiked(auth.jwt.id, comment) ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon />}
+                                            </IconButton>
+                                            <p className='font-bold'>{comment.liked.length} likes</p>
+                                        </div>
+        
+                                    </div>)
+                            ):(
+                                <p className='text-center font-bold'>No comments</p>
+                            )
+                        }
 
                     </div>
                 </section>}

@@ -9,16 +9,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CreatePostModal from '../CreatePost/CreatePostModal';
 import { logout } from '../../Redux/Auth/auth.action';
+import CreateReelModal from '../reels/CreateReelModal';
 
-const Sidebar = () => {
+export const Sidebar = () => {
 
     const [openCreatePostModal,setOpenCreatePostModal]=React.useState(false);
+    const [openCreateReelModal,setOpenCreateReelModal]=React.useState(false);
     const dispatch=useDispatch();
     const handleCloseCreatePostModal=()=>setOpenCreatePostModal(false);
+    const handleCloseCreateReelModal=()=>setOpenCreateReelModal(false);
 
     const handleOpenCreatePostModal=()=>{
         setOpenCreatePostModal(true);
         console.log("open post model....",openCreatePostModal);
+    };
+
+    const handleOpenCreateReelModal=()=>{
+        setOpenCreateReelModal(true);
     };
 
 
@@ -28,6 +35,10 @@ const Sidebar = () => {
             navigate(`/profile/${auth.user?.id}`)
         }else if(item.title==="Create Post"){
             handleOpenCreatePostModal()
+            
+        }
+        else if(item.title==="Create Reels"){
+            handleOpenCreateReelModal()
             
         }
         else{
@@ -103,6 +114,9 @@ const Sidebar = () => {
             </div>
             <div>
                 <CreatePostModal handleClose={handleCloseCreatePostModal} open={openCreatePostModal}/>
+            </div>
+            <div>
+                <CreateReelModal handleClose={handleCloseCreateReelModal} open={openCreateReelModal}/>
             </div>
         </Card>
 

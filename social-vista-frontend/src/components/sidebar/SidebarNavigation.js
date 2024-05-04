@@ -20,7 +20,7 @@ export const sideMenuBarItems=[
   {
     title:"Create Reels",
     icon:<ControlPointIcon/>,
-    path:"/create-reels"
+    path:"/profile"
   },
   {
     title:"Message",
