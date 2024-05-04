@@ -14,35 +14,48 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import { createCommentAction, likePostAction, savePost } from '../../Redux/Post/post.action';
+import { createCommentAction, likeComment, likePostAction, savePost } from '../../Redux/Post/post.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { isPostLiked, numberOfLikes } from '../../Utils/isPostLiked';
+import { isCommentLiked } from '../../Utils/isCommentLiked';
 
 const PostCard = ({ item }) => {
 
-    const [showComments,setShowComments]=useState(false)
-    const {auth,post}=useSelector(store=>store)
-    const dispatch=useDispatch();
-    const handleCreateComment=(description)=>{
-        const reqData={
-            postId:item.id,
-            data:{description}
-            
+    const [showComments, setShowComments] = useState(false)
+    const { auth, post } = useSelector(store => store)
+    const dispatch = useDispatch();
+    const handleCreateComment = (description) => {
+        const reqData = {
+            postId: item.id,
+            data: { description }
         }
         dispatch(createCommentAction(reqData))
-
     }
 
-    const handleLikePost=()=>{
+    const handleLikePost = () => {
         dispatch(likePostAction(item.id))
     }
 
-    const handleShowComments=()=>setShowComments(!showComments)
+    const handleShowComments = () => setShowComments(!showComments)
 
-    const handleSavePost=()=>{
+    const handleSavePost = () => {
         dispatch(savePost(item.id))
     }
 
+    const handleLikeComment = (commentId) => {
+        dispatch(likeComment(commentId))
+
+    }
+
+
+    const createdAtDate = new Date(item?.createdAt);
+    console.log("===============", createdAtDate)
+    const currentDate = new Date();
+    const timeDifferenceMs = currentDate - createdAtDate;
+    const daysDifference = timeDifferenceMs / (1000 * 60 * 60 * 24);
+    const daysPassed = Math.round(daysDifference);
+
+    // console.log(`${daysPassed} days have passed since`);
     return (
         <Card className=''>
             <CardHeader
@@ -62,7 +75,7 @@ const PostCard = ({ item }) => {
             {item?.image ? (
                 <img className='w-full max-h-[35rem] object-cover object-top' src={item?.image} alt="" />
             ) : item?.video ? (
-                <video autoPlay  className='w-full max-h-[35rem]' controls>
+                <video autoPlay className='w-full max-h-[35rem]' controls>
                     <source src={item?.video} type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
@@ -75,7 +88,7 @@ const PostCard = ({ item }) => {
             <CardActions disableSpacing className='flex justify-between'>
                 <div>
                     <IconButton onClick={handleLikePost} aria-label="add to favorites">
-                        {isPostLiked(auth.user.id,item) ? <FavoriteIcon sx={{color:"red"}}/>:<FavoriteBorderIcon />}
+                        {isPostLiked(auth.user.id, item) ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon />}
                     </IconButton>
                     <IconButton aria-label="comment" onClick={handleShowComments}>
                         {true ? <ChatBubbleOutlineIcon /> : <ChatBubbleIcon />}
@@ -87,37 +100,48 @@ const PostCard = ({ item }) => {
                 </div>
                 <div>
                     <IconButton aria-label="bookmark" onClick={handleSavePost}>
-                    {post.savePost.includes(item?.id) ? <BookmarkBorderIcon /> : <BookmarkIcon />}
+                        {post.savePost.includes(item?.id) ? <BookmarkBorderIcon /> : <BookmarkIcon />}
                     </IconButton>
                 </div>
             </CardActions>
-            { showComments &&
-            <section>
-                <div className='flex items-center space-x-5 mx-3 my-5'>
-                    <Avatar sx={{}} />
-                    <input onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                            handleCreateComment(e.target.value)
-                            console.log("enter pressed...", e.target.value)
-                        }
-                    }} className='w-full outline-none bg-transparent border border-[#3b4054] rounded-full px-5 py-2' type="text" placeholder='write your comment....' />
-                </div>
-                <Divider />
-                <div className='mx-3 space-y-2 my-2 text-xs'>
-                    { item.comments?.map((comment)=>
-                    <div className=' flex justify-between items-center'>
-                        <div className='flex items-center space-x-5' >
-                            <Avatar sx={{ height: "2rem", width: "2rem", fontSize: ".8rem" }}>
-                                
-                            </Avatar>
-                            <p>{comment.description}</p>
+            {showComments &&
+                <section>
+                    <div className='flex items-center space-x-5 mx-3 my-5'>
+                        <Avatar sx={{}} />
+                        <input onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                                handleCreateComment(e.target.value)
+                                console.log("enter pressed...", e.target.value)
+                            }
+                        }} className='w-full outline-none bg-transparent border border-[#3b4054] rounded-full px-5 py-2' type="text" placeholder='write your comment....' />
+                    </div>
+                    <Divider />
 
-                        </div>
+                    <div className='mx-3 space-y-2 my-2 text-xs'>
+                        <h1 className='font-bold'>Comments....</h1>
+                        {item.comments?.map((comment) =>
+                            <div className=' flex justify-between items-center' key={comment.id}>
+                                <div className='flex items-center space-x-5' >
+                                    <Avatar sx={{ height: "2rem", width: "2rem", fontSize: ".8rem" }}>
 
-                    </div>)}
+                                    </Avatar>
+                                    <div className='flex-col'>
+                                        <h1 className='font-bold'>@{comment.user.firstName}({daysPassed} day ago)</h1>
+                                        <p>{comment.description}</p>
+                                    </div>
 
-                </div>
-            </section>}
+                                </div>
+                                <div className='flex-col'>
+                                    <IconButton onClick={() => handleLikeComment(comment.id)} aria-label="like-comment">
+                                        {isCommentLiked(auth.jwt.id, comment) ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon />}
+                                    </IconButton>
+                                    <p className='font-bold'>{comment.liked.length} likes</p>
+                                </div>
+
+                            </div>)}
+
+                    </div>
+                </section>}
         </Card>
     )
 }

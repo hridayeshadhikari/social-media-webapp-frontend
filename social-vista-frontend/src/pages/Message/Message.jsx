@@ -69,7 +69,7 @@ const Message = () => {
   const handleCreateMessage = () => {
     if (inputValue.trim() !== "") { // Check if input value is not empty
       const message = {
-        chatId: currentChat?.id,
+        chatId: currentChat.id,
         content: inputValue,
         image: selectedImage,
       };

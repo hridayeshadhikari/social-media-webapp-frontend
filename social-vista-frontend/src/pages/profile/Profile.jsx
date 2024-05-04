@@ -39,6 +39,8 @@ const Profile = () => {
   useEffect(()=>{
     dispatch(getSavePost())
   },[dispatch])
+
+  
   
   return (
     <Card className='my-10 w-[70%]'>
