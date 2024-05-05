@@ -52,7 +52,7 @@ const Message = () => {
   useEffect(() => {
     dispatch(allChatOfUser())
   }, [])
-  console.log("chat--------", message.chats)
+  // console.log("chat--------", message.chats)
 
   const handleSelectImage = async (e) => {
     setLoading(true)
@@ -94,11 +94,16 @@ const Message = () => {
   }
 
   const onMessageReceive = (payload) => {
+    const receivedMessage = JSON.parse(payload.body);
+    setMessages(messages => {
+        if (messages.some(msg => msg.id === receivedMessage.id)) {
+            return messages; 
+        } else {
+            return [...messages, receivedMessage];
+        }
+    });
+};
 
-    const receivedMessage = JSON.parse(payload.body)
-    console.log("message receive from websocket", receivedMessage)
-    setMessages(messages => [...messages, receivedMessage])
-  }
 
   return (
     <div>

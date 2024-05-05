@@ -1,5 +1,5 @@
 import { API_BASE_URL, api } from "../../config/api"
-import { FOLLOW_USER_FAILURE, FOLLOW_USER_REQUEST, FOLLOW_USER_SUCCESS, GET_PROFILE_FAILURE, GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_REQUEST, SEARCH_USER_FAILURE, SEARCH_USER_REQUEST, SEARCH_USER_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_REQUEST, UPDATE_PROFILE_SUCCESS } from "./auth.actionType"
+import { FOLLOW_USER_FAILURE, FOLLOW_USER_REQUEST, FOLLOW_USER_SUCCESS, GET_ALL_USER_FAILURE, GET_ALL_USER_REQUEST, GET_ALL_USER_SUCCESS, GET_PROFILE_FAILURE, GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_REQUEST, SEARCH_USER_FAILURE, SEARCH_USER_REQUEST, SEARCH_USER_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_REQUEST, UPDATE_PROFILE_SUCCESS } from "./auth.actionType"
 import axios from 'axios';
 
 
@@ -107,6 +107,16 @@ export const followUser=(userId)=>async (dispatch)=>{
         dispatch({type:FOLLOW_USER_SUCCESS,payload:data})
     } catch (error) {
         dispatch({type:FOLLOW_USER_FAILURE,payload:error})
+    }
+}
+
+export const getAllUser=()=>async (dispatch)=>{
+    dispatch({type:GET_ALL_USER_REQUEST})
+    try {
+        const {data}=await api.get("api/users")
+        dispatch({type:GET_ALL_USER_SUCCESS,payload:data})
+    } catch (error) {
+        dispatch({type:GET_ALL_USER_FAILURE,payload:error})
     }
 }
 
