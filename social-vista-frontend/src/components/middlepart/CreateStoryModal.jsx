@@ -11,7 +11,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { UploadToCloud } from '../../Utils/UploadToCloud';
 import { createPostAction } from '../../Redux/Post/post.action';
-import { createReel } from '../../Redux/Reel/reel.action';
+import { createStory } from '../../Redux/Story/story.action';
 
 const style = {
   position: 'absolute',
@@ -27,7 +27,7 @@ const style = {
   outline: "none"
 };
 
-export default function CreateReelModal({ handleClose, open }) {
+export default function CreateStoryModal({ handleClose, open }) {
   const { auth } = useSelector(store => store)
   const navigate=useNavigate()
   const formik = useFormik({
@@ -38,18 +38,27 @@ export default function CreateReelModal({ handleClose, open }) {
     },
     onSubmit: (values) => {
       console.log("formik values", values)
-      dispatch(createReel(values))
+      dispatch(createStory(values))
       handleClose()
-      navigate('/reels')
+      navigate('/')
     }
   });
+  const [selectedImage, setSelectedImage] = React.useState();
   const [selectedVideo, setSelectedVideo] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const dispatch = useDispatch();
 
+  const handleSelectImage = async (event) => {
+    setIsLoading(true)
+    const imageUrl = await UploadToCloud(event.target.files[0], "image")
+    setSelectedImage(imageUrl);
+    setIsLoading(false);
+    formik.setFieldValue("image", imageUrl);
+  }
 
   const handleSelectVideo = async (event) => {
+
     setIsLoading(true)
     const videoUrl = await UploadToCloud(event.target.files[0], "video")
     setSelectedVideo(videoUrl);
@@ -82,7 +91,15 @@ export default function CreateReelModal({ handleClose, open }) {
                 className='w-full mt-5 bg-transparent outline-none border rounded-sm p-2'
                 placeholder='write caption....' name="caption" onChange={formik.handleChange} value={formik.values.caption} id="" rows="4"></textarea>
               <div className='flex space-x-5 items-center mt-5'>
-                
+                <div>
+                  <input type="file" accept='image/*' onChange={handleSelectImage} style={{ display: "none" }} id='image-input' />
+                  <label htmlFor="image-input">
+                    <IconButton color='primary' component='span'>
+                      <InsertPhotoIcon />
+                    </IconButton>
+                  </label>
+                  <span>Image</span>
+                </div>
                 <div>
                   <input type="file" accept='video/*' onChange={handleSelectVideo} style={{ display: "none" }} id='video-input' />
                   <label htmlFor="video-input">
@@ -93,7 +110,10 @@ export default function CreateReelModal({ handleClose, open }) {
                   <span>Video</span>
                 </div>
               </div>
-            
+              {selectedImage &&
+                <div>
+                  <img className='h-[10rem]' src={selectedImage} alt="" />
+                </div>}
 
               {selectedVideo && (
                 <div>
@@ -104,7 +124,7 @@ export default function CreateReelModal({ handleClose, open }) {
                 </div>
               )}
               <div className='flex w-full justify-end ' >
-                <Button variant="contained" type="submit" sx={{ borderRadius: "1.5rem" }}>Upload Reel</Button>
+                <Button variant="contained" type="submit" sx={{ borderRadius: "1.5rem" }}>Add to story</Button>
               </div>
 
             </div>
