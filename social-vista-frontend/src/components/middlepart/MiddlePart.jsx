@@ -1,4 +1,4 @@
-import { Avatar, Button, IconButton } from '@mui/material'
+import { Avatar, IconButton } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add';
 import StoryCircle from './StoryCircle';
@@ -6,34 +6,25 @@ import PostCard from '../PostCard/PostCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllPostAction } from '../../Redux/Post/post.action';
 import CreateStoryModal from './CreateStoryModal';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import UserStories from '../Stories/UserStories';
 import ViewStoryModal from './ViewStoryModal';
+import { getfollowingsStory } from '../../Redux/Story/story.action';
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
-
-const story = [11, 1, 1, 1, 1, 1];
 
 const MiddlePart = () => {
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = (userId) => {
+    // console.log("$$$$$$$$$",userId)
+    setOpen(true);
+    setSelectedUserId(userId);
+    // console.log("$$$$$$$$$",selectedUserId)
+  };
   const handleClose = () => setOpen(false);
 
   const [openCreateStoryModal, setOpenCreateStoryModal] = useState(false)
 
   const dispatch = useDispatch();
-  const { post } = useSelector(store => store);
+  const { post, story } = useSelector(store => store);
   const handleCloseCreateStoryModal = () => setOpenCreateStoryModal(false)
 
 
@@ -45,6 +36,13 @@ const MiddlePart = () => {
   useEffect(() => {
     dispatch(getAllPostAction())
   }, [post.newComment])
+
+
+  useEffect(() => {
+    dispatch(getfollowingsStory())
+  }, [dispatch])
+
+  console.log("=============>", story)
 
   return (
     <div className='px-20'>
@@ -60,9 +58,14 @@ const MiddlePart = () => {
           </IconButton>
           <p>new</p>
         </div>
-        {story.map((item,index) => <button onClick={handleOpen}><StoryCircle key={index} /></button>)}
+        {story?.followingsStory.map((item) => (
+          <button onClick={() => handleOpen(item?.user.id)}>
+            <StoryCircle item={item} />
+          </button>
+        ))}
+
       </section>
-      
+
 
       <div className='mt-5 space-y-5'>
         {post.posts.slice().reverse().map((item) => <PostCard item={item} />)}
@@ -70,7 +73,8 @@ const MiddlePart = () => {
       <div>
         <CreateStoryModal handleClose={handleCloseCreateStoryModal} open={openCreateStoryModal} />
       </div>
-      <ViewStoryModal handleClose={handleClose} open={open}/>
+      <ViewStoryModal handleClose={handleClose} open={open} userId={selectedUserId} />
+
     </div>
 
   )

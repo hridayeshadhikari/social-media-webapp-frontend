@@ -2,7 +2,7 @@ import React from 'react'
 import { Avatar } from '@mui/material'
 
 
-const StoryCircle = () => {
+const StoryCircle = ({item}) => {
     return (
         <div>
 
@@ -10,11 +10,11 @@ const StoryCircle = () => {
 
                 <Avatar
                     sx={{ width: "4rem", height: "4rem" }}
-                    src='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'
+                    src='https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?size=626&ext=jpg'
                 >
 
                 </Avatar>
-                <p>harry</p>
+                <p>{item.user.firstName.toLowerCase()}</p>
 
             </div>
         </div>

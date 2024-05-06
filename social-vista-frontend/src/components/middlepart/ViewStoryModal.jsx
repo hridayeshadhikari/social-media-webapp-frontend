@@ -17,14 +17,7 @@ const style = {
   outline: "none"
 };
 
-export default function ViewStoryModal({ handleClose, open }) {
- 
- 
-
- 
-
-  
-
+export default function ViewStoryModal({ handleClose, open ,userId}) {
   return (
     <div>
 
@@ -37,7 +30,7 @@ export default function ViewStoryModal({ handleClose, open }) {
         <Box sx={style}>
          
          
-        <UserStories/>
+        <UserStories userId={userId}/>
         </Box>
       </Modal>
     </div>
