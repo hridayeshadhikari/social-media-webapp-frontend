@@ -13,6 +13,7 @@ const validationSchema = Yup.object({
 });
 
 const Login = () => {
+  const navigate=useNavigate();
 
   const initialValues = {
    
@@ -21,11 +22,14 @@ const Login = () => {
   };
 
   const dispatch =useDispatch();
-  const onSubmit = (values) => {
+  const onSubmit = async (values) => {
     console.log('Form data submitted:', values);
-    dispatch(loginUserAction({data:values}))
-  };
-  const navigate=useNavigate();
+    await dispatch(loginUserAction({ data: values }));
+    navigate('/');
+    window.location.reload();
+};
+
+ 
 
   return (
     <Formik

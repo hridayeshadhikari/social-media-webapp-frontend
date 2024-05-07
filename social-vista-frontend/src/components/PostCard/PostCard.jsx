@@ -1,5 +1,5 @@
 import { Card, CardHeader, Divider } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -14,10 +14,11 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import { createCommentAction, likeComment, likePostAction, savePost } from '../../Redux/Post/post.action';
+import { createCommentAction, getSavePost, likeComment, likePostAction, savePost } from '../../Redux/Post/post.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { isPostLiked, numberOfLikes } from '../../Utils/isPostLiked';
 import { isCommentLiked } from '../../Utils/isCommentLiked';
+import { isPostSaved } from '../../Utils/isPostSaved';
 
 const PostCard = ({ item }) => {
 
@@ -42,12 +43,19 @@ const PostCard = ({ item }) => {
 
     const handleSavePost = () => {
         dispatch(savePost(item.id))
+        console.log("savedPost-------->",post.savePost)
     }
 
     const handleLikeComment = (commentId) => {
         dispatch(likeComment(commentId))
 
     }
+
+    useEffect(() => {
+        dispatch(getSavePost())
+    }, [dispatch])
+    // console.log("savedPost--------$$$$>",post.savePost)
+    
 
 
     const createdAtDate = new Date(item?.createdAt);
@@ -90,7 +98,7 @@ const PostCard = ({ item }) => {
             <CardActions disableSpacing className='flex justify-between'>
                 <div>
                     <IconButton onClick={handleLikePost} aria-label="add to favorites">
-                        {isPostLiked(auth.user.id, item) ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon />}
+                        {isPostLiked(auth.jwt.id, item) ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon />}
                     </IconButton>
                     <IconButton aria-label="comment" onClick={handleShowComments}>
                         {true ? <ChatBubbleOutlineIcon /> : <ChatBubbleIcon />}
@@ -102,7 +110,7 @@ const PostCard = ({ item }) => {
                 </div>
                 <div>
                     <IconButton aria-label="bookmark" onClick={handleSavePost}>
-                        {post.savePost.includes(item?.id) ? <BookmarkBorderIcon /> : <BookmarkIcon />}
+                        {isPostSaved(post.savePost,item) ? <BookmarkIcon /> : <BookmarkBorderIcon />}
                     </IconButton>
                 </div>
             </CardActions>
@@ -110,27 +118,27 @@ const PostCard = ({ item }) => {
                 <section>
                     <div className='flex items-center space-x-5 mx-3 my-5'>
                         <Avatar sx={{}} />
-                        <input 
-                        value={commentText}
-                        onChange={(e) => setCommentText(e.target.value)}
-                        onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                                handleCreateComment(e.target.value)
-                                console.log("enter pressed...", e.target.value)
-                            }
-                        }} className='w-full outline-none bg-transparent border border-[#3b4054] rounded-full px-5 py-2' type="text" placeholder='write your comment....' />
+                        <input
+                            value={commentText}
+                            onChange={(e) => setCommentText(e.target.value)}
+                            onKeyPress={(e) => {
+                                if (e.key === "Enter") {
+                                    handleCreateComment(e.target.value)
+                                    console.log("enter pressed...", e.target.value)
+                                }
+                            }} className='w-full outline-none bg-transparent border border-[#3b4054] rounded-full px-5 py-2' type="text" placeholder='write your comment....' />
                     </div>
                     <Divider />
 
                     <div className='mx-3 space-y-2 my-2 text-xs'>
                         <h1 className='font-bold'>Comments....</h1>
                         {
-                            item.comments && item.comments.length>0 ?(
+                            item.comments && item.comments.length > 0 ? (
                                 item.comments?.slice().reverse().map((comment) =>
                                     <div className=' flex justify-between items-center' key={comment.id}>
                                         <div className='flex items-center space-x-5' >
                                             <Avatar sx={{ height: "2rem", width: "2rem", fontSize: ".8rem" }}>
-        
+
                                             </Avatar>
                                             <div className='flex-col'>
                                                 <h1 className='font-bold'>
@@ -138,7 +146,7 @@ const PostCard = ({ item }) => {
                                                 </h1>
                                                 <p>{comment.description}</p>
                                             </div>
-        
+
                                         </div>
                                         <div className='flex-col'>
                                             <IconButton onClick={() => handleLikeComment(comment.id)} aria-label="like-comment">
@@ -146,9 +154,9 @@ const PostCard = ({ item }) => {
                                             </IconButton>
                                             <p className='font-bold'>{comment.liked.length} likes</p>
                                         </div>
-        
+
                                     </div>)
-                            ):(
+                            ) : (
                                 <p className='text-center font-bold'>No comments</p>
                             )
                         }

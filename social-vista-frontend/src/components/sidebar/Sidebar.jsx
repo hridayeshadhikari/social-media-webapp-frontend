@@ -59,6 +59,7 @@ export const Sidebar = () => {
     const handleLogout=()=>{
         dispatch(logout())
         navigate("/login")
+        window.location.reload();
     }
     return (
         <Card className='card h-screen flex flex-col justify-between py-5'>

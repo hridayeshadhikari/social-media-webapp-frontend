@@ -1,4 +1,6 @@
+export const isPostSaved = (post, item) => {
+    // console.log("$$$$$$$---->", post[0]?.id);
+    // console.log("$$$$$$$====>", item.id);
 
-export const isPostSaved = (userId, post) => {
-    return userId && post && post.id && userId.savePost.includes(post.id);
-};
+    return post.some(items => items.id === item.id);
+}

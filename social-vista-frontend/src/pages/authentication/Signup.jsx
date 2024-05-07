@@ -29,10 +29,11 @@ const Signup = () => {
 
 
   const onSubmit = (values) => {
-    // Handle registration logic here
     values.gender=gender
     console.log('Form data submitted:', values);
     dispatch(registerUserAction({data:values}))
+    navigate('/');
+    window.location.reload();
   };
   const dispatch=useDispatch();
 
