@@ -66,6 +66,25 @@ const PostCard = ({ item }) => {
     const daysPassed = Math.round(daysDifference);
 
     // console.log(`${daysPassed} days have passed since`);
+
+
+    const handleShare = async () => {
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: 'Share Post',
+                    text: `Check out this post by ${item.user.firstName} ${item.user.lastName}: ${item.caption}`,
+                    url: window.location.href // You might want to change this to the actual URL of your post
+                });
+            } else {
+                console.log("Web Share API not supported");
+                // You can provide fallback behavior here, like opening a share dialog or copying the post URL to clipboard
+            }
+        } catch (error) {
+            console.error('Error sharing:', error);
+        }
+    };
+
     return (
         <Card className=''>
             <CardHeader
@@ -103,7 +122,7 @@ const PostCard = ({ item }) => {
                     <IconButton aria-label="comment" onClick={handleShowComments}>
                         {true ? <ChatBubbleOutlineIcon /> : <ChatBubbleIcon />}
                     </IconButton>
-                    <IconButton aria-label="share">
+                    <IconButton aria-label="share" onClick={handleShare}>
                         <ShareIcon />
                     </IconButton>
                     <div className='ml-3 font-semibold text-[#616161]'>{numberOfLikes(item)} likes</div>

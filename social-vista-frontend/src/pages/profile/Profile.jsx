@@ -10,6 +10,7 @@ import ReelCard from '../../components/ReelCard/ReelCard';
 import { useDispatch, useSelector } from 'react-redux';
 import ProfileModal from './ProfileModal';
 import { getSavePost, getUsersPostAction } from '../../Redux/Post/post.action';
+import { getUsersReel } from '../../Redux/Reel/reel.action';
 
 const tabs = [{ value: "post", name: "Posts" },
 { value: "reels", name: "Reels" },
@@ -29,7 +30,7 @@ const Profile = () => {
     setValue(newValue);
   };
 
-  const { auth,post } = useSelector(store => store);
+  const { auth,post,reel } = useSelector(store => store);
   const { id } = useParams();
   useEffect(()=>{
     dispatch(getUsersPostAction(auth?.user.id))
@@ -39,6 +40,12 @@ const Profile = () => {
   useEffect(()=>{
     dispatch(getSavePost())
   },[dispatch])
+
+  useEffect(()=>{
+    dispatch(getUsersReel(auth.jwt.id))
+  },[dispatch])
+
+  console.log("=====--------->",reel)
 
   
   
@@ -83,7 +90,7 @@ const Profile = () => {
               </div>
               ))}
             </div>) : value === "reels" ? <div className='flex gap-2 flex-wrap justify-center'>
-              {reels.map((item) => <ReelCard />)}
+              {reel.reel.map((item) => <ReelCard item={item}/>)}
             </div> : value === "saved" ? <div className='space-y-5 w-[70%] my-10'>
               {post?.savePost.map((item) => (<div className='border border-slate-100 rounded-md'>
                 <PostCard item={item}/>

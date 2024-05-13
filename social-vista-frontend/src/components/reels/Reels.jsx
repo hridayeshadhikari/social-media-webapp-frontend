@@ -8,12 +8,12 @@ import ReelCards from './ReelCards';
 export default function Reels() {
 
 
-  const { reel } = useSelector((store) => store)
+  const { reel } = useSelector(store => store)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllReels())
   }, [dispatch])
-
+  console.log("reels========>", reel)
   // console.log("====>", reel.reel[0])
 
   // const res=reel.reel.map((item)=>{
@@ -24,14 +24,14 @@ export default function Reels() {
 
 
 
-  const productTemplate = (reel) => {
-    console.log("========>",reel)
+  const productTemplate = () => {
+
     return (
       <div>
         {
           reel?.reel?.map((item) => {
             <div key={item.id} >
-              <ReelCards item={item.video} />
+              <ReelCards item={item} />
             </div>
           })
         }
